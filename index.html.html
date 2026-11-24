@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Верстка с нуля: HTML, CSS и JavaScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff;--card:#f5f6f7;--fg:#0a0a23;--mut:#3b3b4f;--line:#d0d0d5;--h:#946400;--c:#002ead;--ok:#00471b;--code:#0a0a23;--on:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a23;--card:#1b1b32;--fg:#f5f6f7;--mut:#a3a3b3;--line:#3b3b4f;--h:#f1be32;--c:#99c9ff;--ok:#acd157;--code:#2a2a40;--on:#0a0a23}}
+:root[data-theme="dark"]{--bg:#0a0a23;--card:#1b1b32;--fg:#f5f6f7;--mut:#a3a3b3;--line:#3b3b4f;--h:#f1be32;--c:#99c9ff;--ok:#acd157;--code:#2a2a40;--on:#0a0a23}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.65 Mulish,system-ui,-apple-system,'Segoe UI',sans-serif;overflow-x:hidden}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+h1,h2,h3{font-family:Mulish,system-ui,sans-serif;font-weight:800;letter-spacing:-.035em;margin:0}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--h),var(--c));transform:scaleX(var(--p,0));transform-origin:0 50%;z-index:60}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(12px + env(safe-area-inset-top,0px)) 5vw 12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 75%,transparent);border-bottom:1px solid var(--line);animation:drop .8s cubic-bezier(.2,.8,.2,1) 1.6s both}
+@keyframes drop{from{transform:translateY(-100%)}}
+.logo{font:600 15px 'JetBrains Mono',monospace}.logo b{color:var(--h)}.logo i{color:var(--c);font-style:normal}
+.links{display:flex;gap:16px;font-size:13px;color:var(--mut)}
+.links a{position:relative;transition:color .3s}.links a.on{color:var(--fg)}
+.links a:after{content:'';position:absolute;left:0;bottom:-5px;height:2px;width:100%;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.links a.on:after,.links a:hover:after{transform:scaleX(1)}
+@media(max-width:1280px){.links{display:none}}
+#th{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;font-size:16px;transition:transform .5s cubic-bezier(.2,.8,.2,1)}#th:hover{transform:rotate(180deg)}
+.btn{position:relative;display:inline-flex;align-items:center;padding:15px 28px;border-radius:99px;font-weight:500;font-size:15px;background:var(--fg);color:var(--bg);border:1.5px solid var(--fg);overflow:hidden;cursor:pointer;font-family:inherit;transition:transform .3s}
+.btn:before{content:'';position:absolute;inset:0;background:var(--c);transform:translateY(101%);transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.btn:hover:before{transform:none}.btn:hover{color:#fff;transform:translateY(-2px)}.btn span{position:relative}
+.btn.g{background:transparent;color:var(--fg)}.btn.g:hover{color:#fff}
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:5vw;align-items:center;padding:120px 6vw 70px;max-width:1300px;margin:auto}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.fl{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.fl span{position:absolute;font:600 var(--s) 'JetBrains Mono',monospace;opacity:.2;color:var(--k);transform:translate(calc(var(--px,0)*var(--z)*34px),calc(var(--py,0)*var(--z)*34px));animation:fl var(--d) ease-in-out infinite alternate}
+@keyframes fl{to{translate:0 -40px;rotate:10deg}}
+.hl,.ed{position:relative;z-index:1}
+h1{font-size:clamp(40px,7vw,96px);line-height:1;margin-bottom:.4em}
+.wd{display:inline-block;overflow:hidden;vertical-align:top;padding:.05em .03em .12em;margin-bottom:-.12em}
+.wd b{display:inline-block;transform:translateY(115%);animation:up 1s cubic-bezier(.2,.9,.2,1) forwards;animation-delay:calc(.15s + var(--i)*.1s)}
+@keyframes up{to{transform:none}}
+.H{color:var(--h)}.C{color:var(--c)}
+.sub{max-width:520px;color:var(--mut);margin:0 0 30px;animation:fade 1s 1s cubic-bezier(.2,.8,.2,1) both}
+.acts{display:flex;flex-wrap:wrap;gap:12px;animation:fade 1s 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fade{from{opacity:0;transform:translateY(18px)}}
+.ed{background:var(--code);border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,10,.5);animation:fade 1.2s .5s cubic-bezier(.2,.8,.2,1) both}
+.tb{display:flex;align-items:center;gap:7px;padding:12px 16px;background:rgba(255,255,255,.05)}
+.tb i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.tb i:nth-child(2){background:#febc2e}.tb i:nth-child(3){background:#28c840}
+.tab{margin-left:10px;font:12px 'JetBrains Mono',monospace;color:#858591;padding:4px 10px;border-radius:8px;transition:.3s}.tab.on{background:rgba(255,255,255,.1);color:#fff}
+.code{margin:0;background:var(--code);color:#dfdfe2;font:13px/1.7 'JetBrains Mono',ui-monospace,monospace;padding:16px 20px;overflow-x:auto;white-space:pre;border-radius:14px;tab-size:2}
+.code i{font-style:normal}.t{color:#f1be32}.a{color:#99c9ff}.s{color:#97e8b0}
+#cd{height:230px;overflow:hidden;border-radius:0}
+.cr{display:inline-block;width:8px;height:1.1em;background:#f1be32;vertical-align:-.2em;animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+.pvw{background:#eceef2;color:#0a0a23;padding:22px;min-height:170px;display:grid;place-items:center;font:16px/1.5 Mulish,sans-serif}
+.sec{position:relative;z-index:1;padding:clamp(60px,10vw,120px) 6vw 0;max-width:1240px;margin:auto}
+h2{font-size:clamp(30px,4.6vw,58px);line-height:1.05;margin-bottom:.5em;max-width:16em}
+.lead{color:var(--mut);max-width:640px;margin:0 0 32px}.lead b{color:var(--fg);font-weight:500}
+.rv{opacity:0;transform:translateY(32px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+.road{position:relative;padding-left:60px}
+.ln{position:absolute;left:19px;top:0;bottom:0;width:2px;background:var(--line)}
+.ln b{position:absolute;inset:0;background:linear-gradient(var(--h),var(--c));transform:scaleY(var(--lp,0));transform-origin:top}
+.st{position:relative;padding-bottom:34px;opacity:.45;transition:opacity .5s}.st.on{opacity:1}
+.st>span{position:absolute;left:-60px;top:-2px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:2px solid var(--line);font-weight:800;font-size:15px;transition:.5s cubic-bezier(.2,.8,.2,1)}
+.st.on>span{background:var(--c);border-color:var(--c);color:#fff;transform:scale(1.12)}
+.st h3{font-size:22px}.st p{margin:4px 0;color:var(--mut);max-width:540px}.st small{color:var(--c);font-weight:500}
+.lab{display:grid;grid-template-columns:minmax(0,310px) minmax(0,1fr);gap:20px}
+@media(max-width:860px){.lab{grid-template-columns:1fr}}
+.pn{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+.pn h4{margin:0 0 10px;font:600 12px 'JetBrains Mono',monospace;color:var(--mut)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.seg button{font:500 12px 'JetBrains Mono',monospace;padding:7px 11px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;transition:.25s}
+.seg button:hover{border-color:var(--c)}.seg button.on{background:var(--c);border-color:var(--c);color:#fff;transform:translateY(-1px)}
+label{display:block;font:500 13px 'JetBrains Mono',monospace;margin-bottom:14px}label output{float:right;color:var(--c)}
+input[type=range]{width:100%;accent-color:var(--c);margin-top:6px}
+.stage{display:flex;flex-direction:column;gap:14px}
+.an{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.an button{font:500 13px 'JetBrains Mono',monospace;padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.part{display:inline-block;padding:0 3px;border-radius:6px;transition:.35s cubic-bezier(.2,.8,.2,1)}.part.hi{background:rgba(241,190,50,.3);transform:translateY(-3px) scale(1.08);box-shadow:0 8px 20px -8px #f1be32}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
+.pills button{font:500 13px Mulish,sans-serif;padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;transition:.3s}
+.pills button.on{background:var(--h);border-color:var(--h);color:#fff;transform:scale(1.06)}
+.note{min-height:3.3em;margin:0;color:var(--mut);font-size:15px}
+.rend{background:#eceef2;color:#0a0a23;border-radius:14px;padding:20px;min-height:90px;display:grid;place-items:center;animation:pop .45s cubic-bezier(.2,.9,.2,1)}
+@keyframes pop{from{opacity:0;transform:scale(.94)}}
+.bxw{display:grid;place-items:center;min-height:300px;background:var(--bg);border-radius:14px;border:1px dashed var(--line)}
+.bx{position:relative;transition:padding .45s cubic-bezier(.2,.8,.2,1)}
+.bx>em{position:absolute;left:8px;top:4px;font:600 10px 'JetBrains Mono',monospace;font-style:normal;opacity:.75;color:#0a0a23}
+.bm{padding:var(--m);background:rgba(246,166,80,.5);border-radius:10px}.bb{padding:var(--b);background:rgba(250,214,90,.9);border-radius:6px}.bp{padding:var(--p);background:rgba(120,205,140,.9)}
+.bc{background:#5b8cff;color:#fff;font:600 13px 'JetBrains Mono',monospace;padding:18px 26px;text-align:center}
+.fbx{display:flex;height:230px;gap:10px;padding:14px;background:var(--bg);border-radius:14px;border:1px dashed var(--line)}
+.fbx b,.gb b{display:grid;place-items:center;color:#fff;font:700 15px 'JetBrains Mono',monospace;border-radius:10px;background:var(--c)}
+.fbx b{width:54px;height:54px}.fbx b:nth-child(2){height:84px;background:var(--h)}.fbx b:nth-child(3){height:38px;background:var(--ok)}.fbx b:nth-child(4){height:66px;background:#a269ff}
+.gb{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);padding:14px;background:var(--bg);border-radius:14px;border:1px dashed var(--line)}
+.gb b{height:46px;animation:pop .5s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--i)*60ms)}.gb b:nth-child(3n+2){background:var(--h)}.gb b:nth-child(3n){background:var(--ok)}
+.trk{position:relative;height:38px;border-bottom:1px dashed var(--line);display:flex;align-items:center}
+.trk span{position:absolute;right:0;top:-2px;font:11px 'JetBrains Mono',monospace;color:var(--mut)}
+.ball{position:absolute;left:0;top:5px;width:28px;height:28px;border-radius:50%;background:var(--h);box-shadow:0 6px 16px -4px var(--h);transition:left 1.6s}
+.go .ball{left:calc(100% - 28px)}
+.ac{border-top:1px solid var(--line)}.ac:last-child{border-bottom:1px solid var(--line)}
+.ac>button{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 4px;background:none;border:0;color:var(--fg);font:800 20px Mulish,sans-serif;letter-spacing:-.02em;cursor:pointer;text-align:left}
+.ac>button:after{content:'+';font-size:30px;font-weight:400;color:var(--c);transition:transform .4s cubic-bezier(.2,.8,.2,1)}.ac.open>button:after{transform:rotate(135deg)}
+.ab{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.2,.8,.2,1)}.ab>div{overflow:hidden}.ac.open .ab{grid-template-rows:1fr}
+.ab p{margin:0 0 14px;color:var(--mut);max-width:640px}.ab .code{margin-bottom:22px}
+.qc{animation:qin .5s cubic-bezier(.2,.9,.2,1);max-width:680px}@keyframes qin{from{opacity:0;transform:translateX(40px)}}
+.qn{margin:0 0 6px;color:var(--c);font:600 13px 'JetBrains Mono',monospace}.qc h3{font-size:clamp(22px,3vw,32px);margin-bottom:18px}
+.op{display:block;width:100%;text-align:left;margin-bottom:10px;padding:14px 18px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--fg);font:500 15px 'JetBrains Mono',monospace;cursor:pointer;transition:border-color .3s,transform .3s}
+.op:hover:not([disabled]){border-color:var(--c);transform:translateX(6px)}
+.op.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,transparent);animation:pop .4s}
+.op.bad{border-color:var(--h);background:color-mix(in srgb,var(--h) 14%,transparent);animation:sh .4s}@keyframes sh{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.ex{color:var(--mut);margin:14px 0}
+.cta{text-align:center;padding:clamp(90px,12vw,160px) 6vw}.cta h2{margin:0 auto .6em;max-width:12em}
+footer{position:relative;z-index:1;padding:28px 6vw;text-align:center;color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
+.k{color:#c9a7ff}.c{color:#858591}
+.xin{width:100%;font:500 16px 'JetBrains Mono',monospace;padding:13px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);transition:border-color .3s,box-shadow .3s}.xin:focus{outline:0;border-color:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.xch{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;min-height:44px}.xch span{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 10px;border-radius:12px;background:var(--c);color:#fff;font:700 15px 'JetBrains Mono',monospace;animation:pop .5s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--i)*70ms)}.xch.r span{background:var(--h)}
+.xfy{background:#002ead;color:#fff;border:0;padding:10px 22px;border-radius:99px;font:15px Mulish,sans-serif;cursor:pointer;transition:transform .2s}.xfy:active{transform:scale(.92)}
+.xcb{display:flex;gap:8px;align-items:center;font:500 13px 'JetBrains Mono',monospace;margin-bottom:12px}
+.xn{padding:14px;background:rgba(153,201,255,.25);border-radius:16px;cursor:pointer;transition:box-shadow .25s,filter .25s}.xn div{padding:14px;margin-top:6px;background:rgba(241,190,50,.3);border-radius:12px;transition:box-shadow .25s,filter .25s}.xn div div{background:rgba(172,209,87,.45);border-radius:10px;text-align:center;font-weight:500}.xn small{display:block;margin-bottom:8px;font:600 11px 'JetBrains Mono',monospace;opacity:.75;pointer-events:none}.xn .xf,.xn.xf{box-shadow:0 0 0 5px #ffcf33;filter:brightness(1.25)}
+.xlg{font:13px 'JetBrains Mono',monospace;color:var(--mut)}.xlg div{padding:6px 0;animation:qin .3s both}
+.xt code{font:600 14px 'JetBrains Mono',monospace;color:var(--c)}.xt p{margin:8px 0 0;font-size:14px;color:#566}
+.xi{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:0 0 20px}.xi div{padding:16px 18px;border-left:3px solid var(--c);background:var(--card);border-radius:0 12px 12px 0;font-size:15px;color:var(--mut)}.xi b{display:block;color:var(--fg);font-weight:800;margin-bottom:2px}
+.hbw{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff;color:#111;transition:border-radius .6s,box-shadow .6s}
+.hbar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#ddd;font:11px 'JetBrains Mono',monospace;color:#444}.hbar i{width:9px;height:9px;border-radius:50%;background:#aaa}.hbar span{margin-left:8px}
+.hpg{padding:22px;min-height:250px;transition:background .6s,color .6s}.hpg h5{margin:0 0 10px;font-size:26px;line-height:1.2;transition:color .6s,background .6s,letter-spacing .6s,text-shadow .6s}.hpg p{margin:0 0 16px;transition:color .6s}
+.hl{text-decoration:underline;color:#00e;transition:color .6s}.hbt{display:inline-block;padding:8px 16px;font-size:13px;transition:background .6s,border .6s,border-radius .6s,box-shadow .6s,color .6s}
+[data-e="0"] .hpg{font-family:'Times New Roman',serif;background:#fff;color:#000}[data-e="0"] .hbt{border:1px solid #777;background:#efefef;border-radius:0}
+[data-e="1"] .hpg{font-family:'Times New Roman',serif;background:#c0c0c0;color:#000080}[data-e="1"] h5{font-family:'Comic Sans MS',cursive}[data-e="1"] .hbt{background:#c0c0c0;border:3px outset #fff;color:#000;border-radius:0}[data-e="1"] .hpg:after{content:'Сайт в разработке!';display:block;margin-top:16px;font-weight:700;color:#c00;animation:hmq 2.4s ease-in-out infinite alternate}@keyframes hmq{from{transform:translateX(-24px)}to{transform:translateX(24px)}}
+[data-e="2"] .hpg{font-family:Verdana,sans-serif;background:#fffbe6;color:#333;border:6px ridge #036}[data-e="2"] h5{background:#036;color:#fff;padding:6px 10px;font-size:19px}[data-e="2"] .hl{color:#c00}[data-e="2"] .hbt{background:#ddd;border:2px outset #fff;border-radius:0}
+[data-e="3"] .hpg{font-family:Tahoma,Verdana,sans-serif;background:linear-gradient(#dcecff,#fff 60%);color:#234}[data-e="3"] h5{color:#1558b0;text-shadow:1px 1px 0 #fff,2px 2px 3px #0003}[data-e="3"] .hl{color:#1a5fb4;text-decoration:none}[data-e="3"] .hbt{background:linear-gradient(#6fb1ff,#1f6fd0 50%,#1558b0 50%,#2d86e8);color:#fff;border:1px solid #0b4a9a;border-radius:9px;box-shadow:0 2px 5px #0005}
+[data-e="4"] .hpg{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;color:#333}[data-e="4"] h5{font-weight:700;color:#222}[data-e="4"] .hl{color:#27ae60;text-decoration:none;font-weight:700}[data-e="4"] .hbt{background:#2ecc71;color:#fff;border:0;border-radius:3px}
+[data-e="5"] .hpg{font-family:'Segoe UI',Roboto,sans-serif;background:#fafafa;color:#212121}[data-e="5"] h5{font-weight:500}[data-e="5"] .hl{color:#6200ee;text-decoration:none}[data-e="5"] .hbt{background:#6200ee;color:#fff;border:0;border-radius:4px;box-shadow:0 3px 6px #0004;text-transform:uppercase;letter-spacing:.08em;font-size:12px}
+[data-e="6"] .hpg{font-family:Mulish,sans-serif;background:linear-gradient(135deg,#0a0a23,#2a2a40);color:#fff}[data-e="6"] h5{font-weight:800;letter-spacing:-.03em}[data-e="6"] .hl{color:#99c9ff;text-decoration:none}[data-e="6"] .hbt{background:linear-gradient(90deg,#002ead,#f1be32);color:#fff;border:0;border-radius:99px;padding:9px 20px}[data-e="6"].hbw{border-radius:22px;box-shadow:0 20px 50px -20px #f1be32}
+.hprog{height:4px;background:var(--line);border-radius:4px;margin-top:12px;overflow:hidden}.hprog b{display:block;height:100%;background:linear-gradient(90deg,var(--h),var(--c));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.hch{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.hch span{padding:6px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,transparent);font:500 13px Mulish,sans-serif;animation:pop .4s both;animation-delay:calc(var(--i)*60ms)}
+.hinfo h3{font-size:clamp(22px,3vw,30px);margin-bottom:10px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
+.fc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;cursor:pointer;transition:transform .35s,border-color .3s,box-shadow .3s;animation:pop .5s both}.fc:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 20px 40px -24px var(--c)}
+.fc h4{margin:0 0 6px;font:800 19px Mulish,sans-serif;letter-spacing:-.02em}.fc p{margin:0;color:var(--mut);font-size:15px}.ft{font:600 11px 'JetBrains Mono',monospace;color:var(--c);margin-bottom:8px}
+.fd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.2,.8,.2,1)}.fd>div{overflow:hidden}.fc.open .fd{grid-template-rows:1fr}.fd p{margin-top:12px;color:var(--fg)}
+.fm{height:6px;border-radius:6px;background:var(--line);margin:14px 0 4px;overflow:hidden}.fm b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--h),var(--c));transition:width 1s cubic-bezier(.2,.8,.2,1)}.fc.open .fm b{width:var(--w)}
+h3.fsub{margin:52px 0 16px;font-size:clamp(22px,3vw,32px)}
+.kgrp{display:flex;gap:10px;align-items:center}
+.khud{display:inline-flex;align-items:center;gap:10px;font:600 13px 'JetBrains Mono',monospace;color:var(--fg);background:none;border:2px solid var(--line);padding:7px 12px;cursor:pointer;transition:border-color .3s}.khud:hover{border-color:var(--h)}
+.kmini{width:54px;height:6px;background:var(--line);display:block;overflow:hidden}.kmini i{display:block;height:100%;width:0;background:var(--h);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+@media(max-width:620px){.kmini,#kqb{display:none}}
+.kd{display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center}@media(max-width:700px){.kd{grid-template-columns:1fr;justify-items:center}}
+.kring{position:relative;width:140px;height:140px}.kring svg{width:100%;height:100%}.kring b{position:absolute;inset:0;display:grid;place-items:center;font:800 28px Mulish,sans-serif}
+.kr0{fill:none;stroke:var(--line);stroke-width:10}.kr1{fill:none;stroke:var(--h);stroke-width:10;stroke-dasharray:327;stroke-dashoffset:327;transform:rotate(-90deg);transform-origin:60px 60px;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.kst{display:flex;flex-wrap:wrap;gap:28px}.kst div{color:var(--mut);font-size:14px}.kst b{display:block;font:800 30px Mulish,sans-serif;color:var(--fg)}
+.kbar{height:10px;background:var(--line);margin:16px 0}.kbar b{display:block;height:100%;width:0;background:var(--h);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.kact{display:flex;flex-wrap:wrap;gap:10px}
+.kbg{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.kb{padding:12px 16px;border:2px solid var(--line);font-size:14px;opacity:.45;filter:grayscale(1);transition:.5s}.kb b{display:block;font-size:15px}.kb.on{opacity:1;filter:none;border-color:var(--h);animation:pop .6s}
+.kdone{margin-top:44px}.kdone .btn.ok{background:var(--ok);border-color:var(--ok);color:var(--on)}
+.st.ok>span{background:var(--ok);border-color:var(--ok);color:var(--on)}
+.seg button.ok{border-color:var(--ok)}.seg button.ok:after{content:' ✓';color:var(--ok)}
+.kck{list-style:none;margin:14px 0;padding:0}.kck li{display:flex;gap:10px;padding:8px 0;font-size:15px;border-bottom:1px solid var(--line)}.kck i{flex:none;width:20px;height:20px;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:13px;transition:.3s}.kck li.ok i{background:var(--ok);border-color:var(--ok);color:var(--on);animation:pop .4s}.kck li.bad i{border-color:var(--h);color:var(--h)}
+#ktoast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);background:var(--h);color:var(--on);padding:12px 22px;font-weight:700;opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.9,.2,1);z-index:90;text-align:center}#ktoast.show{opacity:1;transform:translate(-50%,0)}
+.kmodal{position:fixed;inset:0;z-index:80;background:rgba(10,10,35,.82);display:grid;place-items:start center;padding:12vh 5vw}
+.kqb{width:min(640px,100%);background:var(--card);border:2px solid var(--line);padding:14px;animation:pop .3s}.kqb ul{list-style:none;margin:10px 0 0;padding:0;max-height:50vh;overflow:auto}.kqb li{padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px}.kqb li small{color:var(--mut)}.kqb li.on,.kqb li:hover{background:var(--h);color:var(--on)}.kqb li.on small,.kqb li:hover small{color:var(--on)}
+.kcert{width:min(680px,100%);background:#fff;color:#0a0a23;border:8px double #946400;padding:34px;text-align:center;animation:pop .5s}.kcert h3{font-size:30px;margin-bottom:10px}.kcert .inp{text-align:center;font-size:24px;background:#fff;color:#0a0a23;margin:14px 0}
+.kfl{animation:kfl 1.6s}@keyframes kfl{0%,60%{outline:4px solid var(--h);outline-offset:6px}100%{outline:4px solid transparent;outline-offset:6px}}
+.kcf{position:fixed;width:8px;height:12px;z-index:90;pointer-events:none;animation:kcf 1.1s cubic-bezier(.2,.8,.4,1) forwards}@keyframes kcf{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+@media print{body>*:not(.kmodal){display:none!important}.kmodal{position:static;background:none;display:block;padding:0}.kcert .seg{display:none}}
+
+.cl{font:600 15px 'JetBrains Mono',monospace;color:var(--h);margin:0 0 14px}.cl:after{content:'_';animation:bl 1s steps(1) infinite}
+body{font-size:18px}
+nav{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:2px solid var(--line)}
+.btn{border-radius:0;background:linear-gradient(#fecc4c,#ffac33);border:3px solid #f5a623;color:#0a0a23;font-weight:700;font-size:16px;padding:12px 26px}
+.btn:before{background:#fff}.btn:hover{color:#0a0a23;transform:none}
+.btn.g{background:transparent;border-color:var(--fg);color:var(--fg)}.btn.g:before{background:var(--fg)}.btn.g:hover{color:var(--bg)}
+.pn,.fc,.ed,.xi div{border-radius:0;border:2px solid var(--line)}.xi div{border-left:4px solid var(--h)}
+.code,.rend,.bxw,.fbx,.gb,.hbw,.inp,.xin,.ta,.xn,.xn div{border-radius:2px}
+.seg button,.pills button,.op,.an button{border-radius:0;border-width:2px}
+.seg button.on,.pills button.on{background:var(--h);border-color:var(--h);color:var(--on)}
+.fbx b,.gb b,.xch span{color:var(--on)}.xch span,.fbx b,.gb b{border-radius:2px}
+.ed{border:2px solid #3b3b4f;box-shadow:none}.fc:hover{box-shadow:none;transform:translateY(-2px)}
+.st>span{border-radius:0}.st.on>span{background:var(--h);border-color:var(--h);color:var(--on)}
+#bar{background:var(--h)}h1,h2,h3{letter-spacing:-.02em}
+
+
+
+.l2{grid-template-columns:1fr 1fr}@media(max-width:860px){.l2{grid-template-columns:1fr}}
+.td{display:flex;gap:8px;margin-bottom:12px}.td input{flex:1;min-width:0;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);font:inherit}.td .btn{padding:12px 18px}
+#tl{list-style:none;margin:0 0 10px;padding:0}#tl li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;margin-bottom:8px;border-radius:12px;background:var(--bg);border:1px solid var(--line);cursor:pointer;animation:pop .4s cubic-bezier(.2,.9,.2,1);transition:opacity .35s,transform .35s}
+#tl li.out{opacity:0;transform:translateX(50px)}#tl li.done span{text-decoration:line-through;opacity:.45}#tl li button{background:none;border:0;color:var(--h);font-size:22px;cursor:pointer;line-height:1}
+.pad{position:relative;overflow:hidden;height:150px;border:2px dashed var(--c);border-radius:16px;display:grid;place-items:center;text-align:center;padding:14px;color:var(--mut);font-size:14px;cursor:pointer;outline:none;transition:background .3s}.pad:hover{background:color-mix(in srgb,var(--c) 10%,transparent)}.pad:focus{border-style:solid}
+.dt{position:absolute;width:12px;height:12px;margin:-6px;border-radius:50%;background:var(--h);pointer-events:none;animation:rp .8s ease-out forwards}@keyframes rp{to{transform:scale(9);opacity:0}}
+#lg{list-style:none;margin:12px 0 0;padding:0;font:13px 'JetBrains Mono',monospace;min-height:150px}#lg li{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid var(--line);animation:qin .35s cubic-bezier(.2,.9,.2,1)}#lg b{color:var(--c);min-width:96px}
+.fz{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px}.fz b{display:grid;place-items:center;height:42px;border-radius:10px;background:var(--card);border:1px solid var(--line);font:600 12px 'JetBrains Mono',monospace;animation:pop .45s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--i)*35ms)}.fz .z{background:var(--h);color:#fff;border-color:var(--h)}.fz .u{background:var(--c);color:#fff;border-color:var(--c)}.fz .x{background:var(--ok);color:#fff;border-color:var(--ok)}
+.ta{width:100%;height:190px;background:var(--code);color:#dfdfe2;font:13px/1.6 'JetBrains Mono',monospace;border:1px solid var(--line);border-radius:14px;padding:14px 16px;resize:vertical;tab-size:2;white-space:pre;overflow:auto}.ta:focus{outline:2px solid var(--c)}
+#ppv{display:block;background:#eceef2;color:#0a0a23;border-radius:14px;padding:24px;min-height:410px;font:16px/1.5 Mulish,sans-serif}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}html{scroll-behavior:auto}.rv{opacity:1;transform:none}.fl{display:none}}
+</style>
+</head>
+<body>
+<div id="bar"></div><div class="fl" id="fl"></div>
+<div id="ktoast" role="status" aria-live="polite"></div>
+<div class="kmodal" id="kq" hidden><div class="kqb"><input id="kqi" class="inp" placeholder="Поиск по курсу: flex, grid, урок, тег…" aria-label="Поиск по курсу" autocomplete="off"><ul id="kql"></ul></div></div>
+<div class="kmodal" id="kcm" hidden><div class="kcert"><h3>Сертификат о прохождении</h3><p>Настоящим подтверждается, что</p><input id="kname" class="inp" placeholder="Ваше имя" aria-label="Ваше имя"><p>успешно прошёл(ла) курс «Верстка с нуля: HTML, CSS и JavaScript»</p><small id="kdate"></small><div class="seg" style="justify-content:center;margin:16px 0 0"><button id="kprint" class="on">Печать</button><button id="kclose">Закрыть</button></div></div></div>
+
+<nav>
+ <a class="logo" href="#top"><b>&lt;</b>верстка<i>/&gt;</i></a>
+ <div class="links"><a href="#road">Путь</a><a href="#hist">История</a><a href="#html">HTML</a><a href="#box">Блоки</a><a href="#flex">Flexbox</a><a href="#grid">Grid</a><a href="#anim">Анимации</a><a href="#js">JavaScript</a><a href="#play">Песочница</a><a href="#future">Будущее</a><a href="#quiz">Тест</a></div>
+ <button id="th" aria-label="Сменить тему">◐</button>
+</nav>
+
+<header class="hero" id="top">
+ <div class="hl">
+  <p class="cl">&gt; learn --free</p>
+  <h1><span class="wd" style="--i:0"><b>Учись</b></span> <span class="wd" style="--i:1"><b>верстать:</b></span> <span class="wd" style="--i:2"><b class="H">HTML</b></span> <span class="wd" style="--i:3"><b>и</b></span> <span class="wd" style="--i:4"><b class="C">CSS</b></span> <span class="wd" style="--i:5"><b>с</b></span> <span class="wd" style="--i:6"><b>нуля</b></span></h1>
+  <p class="sub">Бесплатный интерактивный курс по HTML, CSS и JavaScript. Каждую тему можно потрогать: двигайте ползунки, нажимайте кнопки и смотрите, как меняется код и результат.</p>
+  <div class="acts"><a class="btn" href="#road"><span>Начать бесплатно</span></a><a class="btn g" href="#flex"><span>Сразу в песочницу</span></a></div>
+ </div>
+ <div class="ed"><div class="tb"><i></i><i></i><i></i><span class="tab on">index.html</span><span class="tab">style.css</span></div><pre class="code" id="cd"></pre><div class="pvw"><div id="pv"></div></div></div><style id="pvs"></style>
+</header>
+
+<section class="sec" id="prog">
+ <h2 class="rv">Ваш прогресс</h2>
+ <div class="pn kd rv"><div class="kring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="kr0"/><circle cx="60" cy="60" r="52" class="kr1" id="kring"/></svg><b id="kpct">0%</b></div><div><div class="kst"><div><b id="klv">1</b>уровень</div><div><b id="kxp">0</b>очков XP</div><div><b id="kstk">1</b>дней подряд</div><div><b id="kdn">0/15</b>пройдено</div></div><div class="kbar"><b id="kbar"></b></div><div class="kact"><a class="btn" id="kcont" href="#html"><span>Продолжить</span></a><button class="btn g" id="kcert"><span>Сертификат</span></button><button class="btn g" id="krst"><span>Сбросить прогресс</span></button></div></div></div>
+ <div class="kbg rv" id="kbg"></div>
+ <p class="note rv" style="margin-top:14px">Прогресс сохраняется в вашем браузере. Отмечайте уроки пройденными, выполняйте задания с автопроверкой, получайте очки и достижения. Поиск по курсу: Ctrl+K или клавиша /.</p>
+</section>
+
+<section class="sec" id="road">
+ <h2 class="rv">Путь от пустой страницы до адаптивного сайта</h2>
+ <div class="road" id="rd"><div class="ln"><b></b></div>
+  <div class="st"><span>1</span><h3>Структура HTML</h3><p>Теги, атрибуты, заголовки, ссылки и картинки. Учимся объяснять браузеру, что где находится.</p><small>около 2 часов</small></div>
+  <div class="st"><span>2</span><h3>Стили CSS</h3><p>Селекторы, цвета, шрифты и фоны. Подключаем стили и оформляем первые элементы.</p><small>около 3 часов</small></div>
+  <div class="st"><span>3</span><h3>Блочная модель</h3><p>Margin, padding и border: почему блоки занимают именно столько места.</p><small>около 2 часов</small></div>
+  <div class="st"><span>4</span><h3>Flexbox</h3><p>Выравнивание элементов в строку или столбец и распределение свободного места.</p><small>около 3 часов</small></div>
+  <div class="st"><span>5</span><h3>Grid</h3><p>Двумерные сетки для карточек, галерей и целых макетов.</p><small>около 3 часов</small></div>
+  <div class="st"><span>6</span><h3>Адаптив и анимации</h3><p>Media queries, transition и @keyframes: сайт подстраивается под экран и оживает.</p><small>около 4 часов</small></div>
+  <div class="st"><span>7</span><h3>JavaScript</h3><p>Переменные, функции, циклы, DOM и события: страница начинает реагировать на действия посетителя.</p><small>около 6 часов</small></div>
+  <div class="st"><span>8</span><h3>Своя песочница</h3><p>Пишете HTML и CSS сами и сразу видите результат. Лучшая практика для закрепления.</p><small>без ограничений</small></div>
+ </div>
+</section>
+
+<section class="sec" id="hist">
+ <h2 class="rv">История веб-дизайна: от текста к живым интерфейсам</h2>
+ <p class="lead rv">Веб-дизайн появился меньше сорока лет назад, но прошёл путь от серых страниц с синими ссылками до адаптивных интерфейсов с анимацией. Выберите эпоху или запустите путешествие во времени: окно браузера будет менять стиль, а справа появится, что тогда изобрели.</p>
+ <div class="pn rv"><div class="seg" id="hse"></div><div class="lab l2"><div><div class="hbw" id="hbw" data-e="0"><div class="hbar"><i></i><i></i><i></i><span id="hurl"></span></div><div class="hpg"><h5>Заголовок страницы</h5><p>Так выглядел бы один и тот же текст в разные годы. <span class="hl">Ссылка</span></p><span class="hbt">Кнопка</span></div></div><div class="hprog"><b id="hpr"></b></div></div><div class="hinfo"><h3 id="hti"></h3><p class="note" id="htx" style="min-height:0"></p><div class="hch" id="hch"></div></div></div><button class="btn" id="hplay" style="margin-top:20px"><span>Запустить путешествие</span></button></div>
+</section>
+
+<section class="sec" id="html">
+ <h2 class="rv">1. Анатомия тега</h2>
+ <p class="lead rv">HTML описывает <b>структуру</b> страницы: что здесь заголовок, а что абзац, ссылка или картинка. Большинство тегов парные: открывающий и закрывающий (со слэшем). Дополнительные настройки задают <b>атрибуты</b>.</p>
+ <div class="pn rv"><pre class="code" id="an" style="font-size:clamp(13px,2.4vw,19px)"><i class="part" data-k="0">&lt;a</i> <i class="part a" data-k="1">href</i>=<i class="part s" data-k="2">"https://example.com"</i><i class="part" data-k="0">&gt;</i><span class="part" data-k="3">Мой сайт</span><i class="part" data-k="4">&lt;/a&gt;</i></pre>
+  <div class="pills" id="pl"><button>Открывающий тег</button><button>Атрибут</button><button>Значение</button><button>Содержимое</button><button>Закрывающий тег</button></div>
+  <p class="note" id="nt"></p></div>
+ <p class="lead rv" style="margin-top:48px">Выберите тег и посмотрите, как он выглядит в коде и в браузере:</p>
+ <div class="pn rv"><div class="pills" id="tg"></div><div class="lab" style="grid-template-columns:1fr 1fr"><pre class="code" id="tc" style="margin:0"></pre><div class="rend" id="tr"></div></div><p class="note" id="td" style="margin-top:12px"></p></div>
+</section>
+
+<section class="sec" id="box">
+ <h2 class="rv">2. Блочная модель</h2>
+ <p class="lead rv">Каждый элемент — прямоугольная коробка из четырёх слоёв: <b>content</b> (содержимое), <b>padding</b> (внутренний отступ), <b>border</b> (рамка) и <b>margin</b> (внешний отступ). Фон закрашивает content, padding и border, а margin всегда прозрачен. Совет: добавьте <b>*{box-sizing:border-box}</b>, и width будет включать padding и рамку.</p>
+ <div class="lab rv">
+  <div class="pn"><label>margin <output id="om">24px</output><input type="range" id="rm" min="0" max="44" value="24"></label><label>border <output id="ob">8px</output><input type="range" id="rb" min="0" max="20" value="8"></label><label>padding <output id="op">22px</output><input type="range" id="rp" min="0" max="44" value="22"></label></div>
+  <div class="stage"><div class="bxw"><div class="bx bm" id="bxm"><em>margin</em><div class="bx bb"><em>border</em><div class="bx bp"><em>padding</em><div class="bc">content</div></div></div></div></div><pre class="code" id="bcode"></pre></div>
+ </div>
+</section>
+
+<section class="sec" id="flex">
+ <h2 class="rv">3. Flexbox</h2>
+ <p class="lead rv">Flexbox выстраивает элементы в одну линию: строку или столбец. Главная ось задаётся <b>flex-direction</b>, вдоль неё работает <b>justify-content</b>, поперёк — <b>align-items</b>. Это самый быстрый способ центрировать и распределить блоки.</p>
+ <div class="lab rv">
+  <div class="pn" id="fc"><h4>flex-direction</h4><div class="seg" data-p="flex-direction"><button class="on">row</button><button>column</button></div><h4>justify-content</h4><div class="seg" data-p="justify-content"><button class="on">flex-start</button><button>center</button><button>flex-end</button><button>space-between</button><button>space-around</button></div><h4>align-items</h4><div class="seg" data-p="align-items"><button class="on">flex-start</button><button>center</button><button>flex-end</button></div></div>
+  <div class="stage"><div class="fbx" id="fb"><b>1</b><b>2</b><b>3</b><b>4</b></div><pre class="code" id="fcode"></pre></div>
+ </div>
+</section>
+
+<section class="sec" id="grid">
+ <h2 class="rv">4. Grid</h2>
+ <p class="lead rv">Grid делит область на колонки и строки сразу в двух направлениях. Единица <b>fr</b> — доля свободного места: <b>repeat(3, 1fr)</b> даёт три равные колонки, а <b>gap</b> задаёт промежутки между ячейками.</p>
+ <div class="lab rv">
+  <div class="pn"><label>колонок <output id="oc">3</output><input type="range" id="rc" min="1" max="6" value="3"></label><label>gap <output id="og">12px</output><input type="range" id="rg" min="0" max="32" value="12"></label><div class="seg"><button id="sp">Растянуть ячейку 1</button></div></div>
+  <div class="stage"><div class="gb" id="gb"></div><pre class="code" id="gcode"></pre></div>
+ </div>
+</section>
+
+<section class="sec" id="anim">
+ <h2 class="rv">5. Анимации и плавность</h2>
+ <p class="lead rv"><b>transition</b> анимирует переход между состояниями, а <b>@keyframes</b> описывает сложные сценарии. Характер движения задаёт функция времени (easing). Запустите гонку: у всех шариков одинаковая длительность, но разный easing.</p>
+ <div class="pn rv" id="race"><button class="btn" id="rb2" style="margin-bottom:16px"><span>Запустить гонку</span></button><div id="tks"></div><pre class="code" style="margin-top:18px">.ball{
+  transition:left 1.6s ease-out;
+}</pre></div>
+</section>
+
+<section class="sec" id="js">
+ <h2 class="rv">6. JavaScript: страница реагирует на вас</h2>
+ <p class="lead rv">HTML задаёт структуру, CSS — внешний вид, а <b>JavaScript</b> — поведение. Скрипт находит элементы в <b>DOM</b> (дереве страницы), меняет их и реагирует на <b>события</b>: клик, ввод, нажатие клавиши. Подключают его тегом <b>&lt;script src="app.js"&gt;</b> в конце body, чтобы страница успела загрузиться. Ниже три живых примера: справа код, слева то, что он делает.</p>
+ <div class="lab l2 rv"><div class="pn"><h4>Пример 1. Список дел: создаём элементы</h4><div class="td"><input id="ti" placeholder="Что нужно сделать?" aria-label="Новое дело"><button class="btn" id="ta"><span>Добавить</span></button></div><ul id="tl"></ul><p class="note" id="tn"></p></div><div class="stage"><pre class="code" id="jc1"></pre><p class="note">createElement создаёт элемент, append вставляет его в страницу, classList.toggle включает и выключает класс. Так работает большинство интерфейсов.</p></div></div>
+ <div class="lab l2 rv" style="margin-top:20px"><div class="pn"><h4>Пример 2. События: что слышит браузер</h4><div class="pad" id="pad" tabindex="0">Наведите курсор, кликните один и два раза. Кликнув внутрь, нажмите любую клавишу.</div><ul id="lg"></ul></div><div class="stage"><pre class="code" id="jc2"></pre><p class="note">addEventListener подписывает функцию на событие. Объект e хранит подробности: координаты мыши, нажатую клавишу, цель события.</p></div></div>
+ <div class="lab rv" style="margin-top:20px"><div class="pn"><h4>Пример 3. Циклы и условия</h4><label>числа до <output id="on2">15</output><input type="range" id="rn" min="1" max="30" value="15"></label><div class="seg" id="lm"><button class="on">Цикл for</button><button>FizzBuzz</button></div><p class="note">FizzBuzz — классическая задача: числа, кратные 3, заменяем на Fizz, кратные 5 на Buzz, кратные обоим на FizzBuzz. Оператор % даёт остаток от деления.</p></div><div class="stage"><div class="fz" id="fz"></div><pre class="code" id="fzc"></pre></div></div>
+</section>
+
+<section class="sec" id="jsx">
+ <h2 class="rv">Ещё глубже в JavaScript</h2>
+ <p class="lead rv">Браузер читает скрипт сверху вниз и выполняет команды по порядку. Зная четыре идеи, можно читать почти любой код: <b>значения и типы</b>, <b>функции</b>, <b>события</b> и <b>DOM</b>. Ниже четыре лаборатории, и в каждой работает настоящий JavaScript.</p>
+ <div class="xi rv"><div><b>Инструкции</b>Каждая команда заканчивается точкой с запятой. Строки с // — комментарии, браузер их пропускает.</div><div><b>Консоль</b>Откройте DevTools (F12) и вкладку Console: туда выводит сообщения console.log, там же видны ошибки.</div><div><b>Строгое сравнение</b>Используйте === вместо ==: он не приводит типы, и неожиданностей меньше.</div><div><b>Область видимости</b>let и const живут внутри фигурных скобок, где объявлены. var устарел.</div></div>
+ <div class="pn rv"><h4>Лаборатория 1. Три слоя одной страницы</h4><p class="note" style="min-height:0;margin-bottom:12px">Одна и та же кнопка. Переключайте слои и смотрите, что добавляет каждый язык.</p><div class="seg" id="xly"><button>Только HTML</button><button>+ CSS</button><button>+ JavaScript</button></div><div class="lab l2"><div class="rend"><button id="xlyb">Лайк</button></div><pre class="code" id="xlyc" style="margin:0"></pre></div><p class="note" id="xlyn" style="margin-top:12px"></p></div>
+ <div class="pn rv" style="margin-top:20px"><h4>Лаборатория 2. Типы данных</h4><p class="note" style="min-height:0;margin-bottom:12px">Переменная — именованная ячейка памяти. <b>let</b> можно менять, <b>const</b> нельзя переприсвоить. У каждого значения есть тип. Введите число, слово, true, null, [1,2,3] или {&quot;a&quot;:1}.</p><input class="xin" id="xti" value="42" aria-label="Значение"><div class="lab l2" style="margin-top:14px"><pre class="code" id="xtc" style="margin:0"></pre><div class="rend xt" id="xto"></div></div></div>
+ <div class="pn rv" style="margin-top:20px"><h4>Лаборатория 3. Массивы: map, filter, reduce</h4><p class="note" style="min-height:0;margin-bottom:12px">Массив — упорядоченный список. Его методы принимают функцию и сами обходят элементы, поэтому циклы нужны реже. Измените числа и выберите метод.</p><input class="xin" id="xai" value="3, 1, 4, 1, 5, 9" aria-label="Числа через запятую"><div class="seg" id="xam" style="margin-top:14px"></div><div class="xch" id="xain"></div><pre class="code" id="xacd"></pre><div class="xch r" id="xaout"></div><p class="note" id="xanm"></p></div>
+ <div class="pn rv" style="margin-top:20px"><h4>Лаборатория 4. События и всплытие</h4><p class="note" style="min-height:0;margin-bottom:12px">Событие click не останавливается на элементе: оно <b>всплывает</b> вверх по родителям. Нажмите на любой блок и посмотрите путь. Включите stopPropagation(), чтобы остановить всплытие на среднем блоке.</p><label class="xcb"><input type="checkbox" id="xstp"> stopPropagation() на среднем блоке</label><div class="lab l2"><div class="xn" id="xn1"><small>внешний</small><div id="xn2"><small>средний</small><div id="xn3"><small>внутренний</small>клик сюда</div></div></div><div class="xlg" id="xlg">Здесь появится путь события.</div></div></div>
+</section>
+
+<section class="sec" id="tasks">
+ <h2 class="rv">Практика: задания с автопроверкой</h2>
+ <p class="lead rv">Как на лучших обучающих платформах: читайте условие, пишите код справа, а страница сама проверит результат. Каждое выполненное условие загорается зелёным. Если застряли, есть подсказка и готовое решение. За каждое задание начисляется 30 XP.</p>
+ <div class="pn rv"><div class="seg" id="ktabs"></div><div class="lab l2"><div><h3 id="ktt" class="sh"></h3><p class="note" id="ktd" style="min-height:0"></p><ul class="kck" id="kck"></ul><div class="seg"><button id="kchk" class="on">Проверить</button><button id="khint">Подсказка</button><button id="ksol">Решение</button><button id="krs">Сбросить</button></div><p class="note" id="kmsg"></p></div><div><h4>HTML</h4><textarea class="ta" id="kh" spellcheck="false" aria-label="HTML"></textarea><h4 style="margin-top:12px">CSS</h4><textarea class="ta" id="kc" spellcheck="false" aria-label="CSS"></textarea><h4 style="margin-top:12px">Результат</h4><div class="rend" id="kpv" style="display:block;padding:0"></div></div></div></div>
+</section>
+
+<section class="sec" id="play">
+ <h2 class="rv">7. Песочница: пишите свой код</h2>
+ <p class="lead rv">Выберите заготовку или начните с нуля. Меняйте HTML и CSS: результат обновляется при каждой букве. Попробуйте поменять цвета, радиусы и отступы, добавить :hover или @keyframes.</p>
+ <div class="pn rv"><div class="seg" id="ps"></div><div class="lab l2"><div><h4>HTML</h4><textarea class="ta" id="ph" spellcheck="false" aria-label="HTML"></textarea><h4 style="margin-top:12px">CSS</h4><textarea class="ta" id="pc" spellcheck="false" aria-label="CSS"></textarea></div><div><h4>Результат</h4><div id="ppv"></div></div></div></div>
+</section>
+
+<section class="sec" id="future">
+ <h2 class="rv">Будущее веб-дизайна</h2>
+ <p class="lead rv">Никто не знает будущее наверняка, но направления видны уже сейчас. Ниже шесть трендов. Нажмите на карточку, чтобы узнать подробности и увидеть, насколько тренд близок, или отфильтруйте их по горизонту.</p>
+ <div class="seg rv" id="ffl"><button class="on">Все</button><button>Уже сегодня</button><button>Скоро</button><button>Дальше</button></div>
+ <div class="fgrid" id="fg"></div>
+ <h3 class="fsub rv">Что это значит для начинающего</h3>
+ <div class="xi rv"><div><b>Основы не стареют</b>HTML, CSS и JavaScript остаются фундаментом, даже когда инструменты меняются.</div><div><b>Доступность — навык номер один</b>Проверяйте контраст, описывайте картинки через alt и пробуйте управлять сайтом с клавиатуры.</div><div><b>Новое пробуйте осторожно</b>Смотрите поддержку на caniuse.com и оставляйте запасной вариант для старых браузеров.</div><div><b>Собирайте портфолио</b>Три-пять небольших проектов убедят лучше любых слов о себе.</div></div>
+</section>
+
+<section class="sec" id="cheat">
+ <h2 class="rv">Шпаргалка: что запомнить</h2>
+ <div class="rv" id="acc"></div>
+</section>
+
+<section class="sec" id="quiz">
+ <h2 class="rv">Проверьте себя</h2>
+ <div class="pn rv" id="qz"></div>
+</section>
+
+<section class="cta"><h2 class="rv">Теперь откройте редактор и сверстайте своё</h2><a class="btn" href="#top"><span>Наверх</span></a></section>
+<footer>Верстка с нуля, 2026. Все примеры работают на CSS, JS и Canvas без библиотек. Визуальный стиль вдохновлён дизайн-языком «Command-line Chic» от freeCodeCamp.</footer>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)],clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const rm=matchMedia('(prefers-reduced-motion:reduce)').matches,root=document.documentElement;
+const E=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const hH=s=>E(s).replace(/(&lt;\/?)([\w-]+)/g,'$1<i class=t>$2</i>').replace(/([\w-]+)=("[^"]*")/g,'<i class=a>$1</i>=<i class=s>$2</i>');
+const hC=s=>E(s).replace(/^([^{}\n]+)(?={)/gm,'<i class=t>$1</i>').replace(/^(\s+)([\w-]+)(:)([^;\n]*)(;?)/gm,'$1<i class=a>$2</i>$3<i class=s>$4</i>$5');
+const scope=(css,id)=>css.replace(/(^|})(\s*)([^{}]+)\{/g,(m,a,b,s)=>a+b+s.split(',').map(x=>'#'+id+' '+x.trim()).join(',')+'{');
+$('#th').onclick=()=>{const d=matchMedia('(prefers-color-scheme:dark)').matches,c=root.dataset.theme||(d?'dark':'light');root.dataset.theme=c=='dark'?'light':'dark'};
+/* плавающие символы */
+const fl=$('#fl'),G=['</>','{ }','<p>','#id','.cls',':hover','flex','grid','<a>','px','fr','@media'];
+G.forEach((g,i)=>{const s=document.createElement('span');s.textContent=g;s.style.cssText='left:'+Math.random()*92+'%;top:'+Math.random()*90+'%;--s:'+(16+Math.random()*22)+'px;--k:var(--'+(i%2?'c':'h')+');--z:'+(Math.random()*2-1).toFixed(2)+';--d:'+(6+Math.random()*8)+'s;animation-delay:-'+Math.random()*8+'s';fl.appendChild(s)});
+addEventListener('pointermove',e=>{root.style.setProperty('--px',e.clientX/innerWidth*2-1);root.style.setProperty('--py',e.clientY/innerHeight*2-1)});
+/* печатающийся редактор */
+const H='<div class="card">\n  <h3>Привет, CSS!</h3>\n  <p>Карточка собирается сама.</p>\n  <button>Начать</button>\n</div>';
+const C='.card{\n  padding:24px;\n  background:#fff;\n  border-radius:18px;\n  box-shadow:0 14px 34px #0a0a2333;\n}\nh3{\n  margin:0 0 6px;\n  color:#946400;\n}\nbutton{\n  background:#002ead;\n  color:#fff;\n  border:0;\n  padding:11px 20px;\n  border-radius:99px;\n}';
+const cd=$('#cd'),pv=$('#pv'),pvs=$('#pvs'),tabs=$$('.tab'),CR='<u class="cr"></u>';
+const tab=i=>tabs.forEach((t,j)=>t.classList.toggle('on',i==j));
+async function type(t,u){for(let i=1;i<=t.length;i++){u(t.slice(0,i));cd.scrollTop=cd.scrollHeight;await sleep(t[i-1]=='\n'?140:20+Math.random()*28)}}
+const uh=t=>{cd.innerHTML=hH(t)+CR;pv.innerHTML=t},uc=t=>{cd.innerHTML=hC(t)+CR;pvs.textContent=scope(t,'pv')};
+if(rm){uh(H);uc(C);cd.innerHTML=hC(C);tab(1)}else(async()=>{for(;;){pv.innerHTML='';pvs.textContent='';tab(0);await type(H,uh);await sleep(600);tab(1);await type(C,uc);await sleep(5500)}})();
+/* анатомия тега */
+const parts=$$('#an [data-k]'),pls=$$('#pl button'),N=['Начало элемента: имя тега и его атрибуты. Угловые скобки отделяют разметку от текста.','Имя атрибута говорит, что именно настраиваем. Здесь href означает адрес, куда ведёт ссылка.','Значение атрибута всегда пишут в кавычках. Здесь это адрес сайта.','Текст между тегами — то, что увидит посетитель.','Слэш закрывает элемент. Без него браузер решит, что ссылка продолжается.'];
+let ak=0,hov=false;const mark=k=>{ak=k;parts.forEach(p=>p.classList.toggle('hi',p.dataset.k==k));pls.forEach((b,i)=>b.classList.toggle('on',i==k));$('#nt').textContent=N[k]};
+pls.forEach((b,i)=>{b.onpointerenter=()=>{hov=true;mark(i)};b.onclick=()=>mark(i)});$('#pl').onpointerleave=()=>hov=false;
+mark(0);if(!rm)setInterval(()=>{if(!hov)mark((ak+1)%5)},2400);
+/* теги */
+const T={h1:['<h1>Заголовок страницы</h1>','Главный заголовок. На странице он должен быть один.'],p:['<p>Абзац текста.</p>','Абзац. Браузер сам добавляет отступы сверху и снизу.'],a:['<a href="#">Ссылка</a>','Ссылка. Адрес задаётся атрибутом href.'],img:['<img src="cat.jpg" alt="Кот">','Картинка. Тег непарный, а alt описывает изображение для тех, кто его не видит.','<img alt="Кот" width="64" height="64" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'64\' height=\'64\' rx=\'14\' fill=\'%232f62f0\'/%3E%3C/svg%3E">'],ul:['<ul>\n  <li>HTML</li>\n  <li>CSS</li>\n</ul>','Маркированный список. Каждый пункт — отдельный тег li.'],button:['<button>Нажми меня</button>','Кнопка. Реагирует на нажатие и подходит для действий.'],input:['<input placeholder="Ваше имя">','Поле ввода. Тоже непарный тег, текст-подсказка задаётся в placeholder.']};
+const tg=$('#tg');Object.keys(T).forEach((k,i)=>{const b=document.createElement('button');b.textContent='<'+k+'>';b.onclick=()=>{$$('button',tg).forEach(x=>x.classList.toggle('on',x==b));const r=$('#tr');r.innerHTML=T[k][2]||T[k][0];r.style.animation='none';r.offsetWidth;r.style.animation='';$('#tc').innerHTML=hH(T[k][0]);$('#td').textContent=T[k][1]};tg.appendChild(b);if(!i)b.click()});
+/* FLIP */
+function flip(box,apply){const els=[...box.children],f=els.map(e=>e.getBoundingClientRect());apply();if(rm)return;els.forEach((e,i)=>{const l=e.getBoundingClientRect(),dx=f[i].left-l.left,dy=f[i].top-l.top;if(dx||dy)e.animate([{transform:'translate('+dx+'px,'+dy+'px)'},{transform:'none'}],{duration:650,easing:'cubic-bezier(.2,.9,.2,1)'})})}
+/* блочная модель */
+function bm(){const m=$('#rm').value,b=$('#rb').value,p=$('#rp').value,s=$('#bxm').style;s.setProperty('--m',m+'px');s.setProperty('--b',b+'px');s.setProperty('--p',p+'px');$('#om').textContent=m+'px';$('#ob').textContent=b+'px';$('#op').textContent=p+'px';$('#bcode').innerHTML=hC('.box{\n  margin:'+m+'px;\n  border:'+b+'px solid;\n  padding:'+p+'px;\n}')}
+['rm','rb','rp'].forEach(i=>$('#'+i).oninput=bm);bm();
+/* flexbox */
+const fb=$('#fb'),fs={'flex-direction':'row','justify-content':'flex-start','align-items':'flex-start'};
+function fx(){$('#fcode').innerHTML=hC('.container{\n  display:flex;\n'+Object.keys(fs).map(k=>'  '+k+':'+fs[k]+';\n').join('')+'}')}
+$$('#fc .seg').forEach(s=>s.onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('button',s).forEach(x=>x.classList.toggle('on',x==b));fs[s.dataset.p]=b.textContent;flip(fb,()=>fb.style.setProperty(s.dataset.p,b.textContent));fx()});
+fb.style.flexDirection='row';fx();
+/* grid */
+const gb=$('#gb'),gs={c:3,g:12,s:false};for(let i=0;i<8;i++)gb.insertAdjacentHTML('beforeend','<b style="--i:'+i+'">'+(i+1)+'</b>');
+function gr(){flip(gb,()=>{gb.style.gridTemplateColumns='repeat('+gs.c+',1fr)';gb.style.gap=gs.g+'px';gb.children[0].style.gridColumn=gs.s?'span 2':''});$('#oc').textContent=gs.c;$('#og').textContent=gs.g+'px';$('#gcode').innerHTML=hC('.grid{\n  display:grid;\n  grid-template-columns:repeat('+gs.c+',1fr);\n  gap:'+gs.g+'px;\n}'+(gs.s?'\n.item:first-child{\n  grid-column:span 2;\n}':''))}
+$('#rc').oninput=e=>{gs.c=+e.target.value;gr()};$('#rg').oninput=e=>{gs.g=+e.target.value;gr()};$('#sp').onclick=e=>{gs.s=!gs.s;e.target.classList.toggle('on',gs.s);gr()};gr();
+/* гонка easing */
+const EZ=['linear','ease','ease-in','ease-out','cubic-bezier(.68,-.55,.27,1.55)'];
+$('#tks').innerHTML=EZ.map(z=>'<div class="trk"><div class="ball" style="transition-timing-function:'+z+'"></div><span>'+(z[0]=='c'?'cubic-bezier (с отскоком)':z)+'</span></div>').join('');
+$('#rb2').onclick=()=>{const g=$('#race').classList.toggle('go');$('#rb2 span').textContent=g?'Вернуть назад':'Запустить гонку'};
+/* шпаргалка */
+const AC=[['display','Определяет, как элемент ведёт себя в потоке: block занимает всю строку, inline живёт внутри текста, flex и grid включают раскладки, none скрывает элемент.','.box{\n  display:flex;\n}'],['position','static — обычное положение. relative сдвигает от своего места, absolute позиционируется относительно ближайшего родителя с position, fixed прикрепляет к окну, sticky прилипает при прокрутке.','.badge{\n  position:absolute;\n  top:8px;\n  right:8px;\n}'],['Единицы измерения','px — пиксели, rem — размер от шрифта страницы, % — доля родителя, vw и vh — доля окна браузера, fr — доля свободного места в grid.','h1{\n  font-size:clamp(32px,6vw,72px);\n}'],['Цвета и переменные','Цвет можно задать именем, hex, rgb() или hsl(). Повторяющиеся значения удобно хранить в переменных и менять в одном месте.',':root{\n  --accent:#946400;\n}\na{\n  color:var(--accent);\n}'],['Псевдоклассы','Описывают состояние элемента: :hover при наведении, :focus при фокусе, :nth-child(2) для выбора по номеру.','a:hover{\n  color:#002ead;\n}'],['Адаптив','Media query применяет стили только при нужных условиях, например на узких экранах. Начинайте с мобильной версии и усложняйте для больших.','@media (max-width:700px){\n  .menu{\n    display:none;\n  }\n}']];
+const hJ=s=>E(s).replace(/('[^'\n]*')/g,'<i class=s>$1</i>').replace(/\b(const|let|function|return|if|else|for|async|await)\b/g,'<i class=k>$1</i>').replace(/(\/\/.*)$/gm,'<i class=c>$1</i>');
+AC.push(['Каркас HTML-страницы','Любая страница начинается с одного и того же каркаса. DOCTYPE включает современный режим, head хранит служебное (кодировку, заголовок, подключение стилей), а в body лежит всё, что видит посетитель. Скрипты подключают в конце body.',`<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Моя страница</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Привет!</h1>
+  <script src="app.js"><\/script>
+</body>
+</html>`,'h'],
+['Селекторы и специфичность','Селектор выбирает элементы: тег (p), класс (.card), id (#main), потомок (.card p), группа (h1, h2). Если правила конфликтуют, побеждает более специфичное: id сильнее класса, класс сильнее тега. При равенстве выигрывает правило, которое написано ниже.',`p{
+  color:gray;
+}
+.card p{
+  color:black;
+}
+#main .card p{
+  color:#946400;
+}`],
+['Доступность','Хорошая вёрстка понятна всем, в том числе людям с экранными читалками. Описывайте картинки через alt, связывайте поля с подписями через label, используйте семантические теги (header, nav, main, footer) и следите за контрастом текста.',`<img src="cat.jpg" alt="Рыжий кот на диване">
+<label for="name">Имя</label>
+<input id="name">`,'h'],
+['JS: переменные и типы','const объявляет значение, которое нельзя переназначить, let — которое можно менять. Основные типы: string (строка), number (число), boolean (true или false), null, undefined и object, к которому относятся и массивы. Тип узнают через typeof.',`const name = 'Аня';
+let score = 10;
+score = score + 5;
+console.log(typeof name);`,'j'],
+['JS: функции','Функция — именованный набор действий. Она принимает параметры и возвращает результат через return. Стрелочная запись короче и часто используется в обработчиках.',`function sum(a, b) {
+  return a + b;
+}
+const double = n => n * 2;
+console.log(sum(2, 3), double(4));`,'j'],
+['JS: массивы','Массив хранит список значений. Метод map создаёт новый массив, преобразуя каждый элемент, filter оставляет только подходящие, forEach просто перебирает.',`const nums = [1, 2, 3, 4];
+const even = nums.filter(n => n % 2 === 0);
+const squares = nums.map(n => n * n);`,'j'],
+['JS: DOM и события','DOM — дерево элементов страницы, которым управляет JavaScript. Элемент находят через querySelector, затем меняют текст, классы и стили. На действия посетителя реагируют через addEventListener.',`const btn = document.querySelector('.btn');
+btn.addEventListener('click', () => {
+  btn.classList.toggle('active');
+});`,'j'],
+['JS: async и fetch','Запрос к серверу занимает время. Слово await заставляет код дождаться ответа внутри функции с async, а fetch отправляет сам запрос.',`async function load() {
+  const res = await fetch('/api/items');
+  const data = await res.json();
+  console.log(data);
+}`,'j']);
+$('#acc').innerHTML=AC.map(a=>'<div class="ac"><button>'+a[0]+'</button><div class="ab"><div><p>'+E(a[1])+'</p><pre class="code">'+(a[3]=='j'?hJ:a[3]=='h'?hH:hC)(a[2])+'</pre></div></div></div>').join('');
+$$('.ac>button').forEach(b=>b.onclick=()=>{const p=b.parentNode,o=p.classList.contains('open');$$('.ac').forEach(x=>x.classList.remove('open'));if(!o)p.classList.add('open')});$('.ac').classList.add('open');
+/* тест */
+const Q=[['Какой тег задаёт главный заголовок страницы?',['<title>','<h1>','<header>','<head>'],1,'h1 — главный заголовок внутри страницы, и он должен быть один.'],['Что входит в блочную модель?',['Только content и padding','content, padding, border и margin','Только margin','Только border'],1,'Все четыре слоя: содержимое, внутренний отступ, рамка и внешний отступ.'],['Какое свойство включает flexbox?',['display:flex','position:flex','flex:on','layout:flex'],0,'Flexbox включается значением flex у свойства display.'],['Как сделать три равные колонки в Grid?',['grid-columns:3','columns:3 equal','grid-template-columns:repeat(3,1fr)','display:columns 3'],2,'repeat(3,1fr) создаёт три колонки, каждая занимает равную долю места.'],['Каким словом объявляют переменную, которую нельзя переназначить?',['let','var','const','static'],2,'const запрещает переназначение, а let подходит для значений, которые меняются.'],['Что покажет console.log(typeof 5)?',['string','number','integer','boolean'],1,'Все числа в JavaScript имеют тип number: и целые, и дробные.'],['Как подписаться на клик по элементу?',['el.onClick()','el.addEventListener("click", fn)','el.listen(click)','el.bind("click")'],1,'addEventListener принимает название события и функцию-обработчик.']];
+let qi=0,sc=0;const qz=$('#qz');
+function ask(){if(qi>=Q.length){const m=sc==Q.length?'Отличный результат: основы вы знаете.':sc>Q.length/2?'Хорошо. Повторите пару тем и закрепите на практике.':'Вернитесь к урокам и попробуйте ещё раз: песочницы помогут.';qz.innerHTML='<div class="qc"><h3>Результат: <span id="rs">0</span> из '+Q.length+'</h3><p class="ex">'+m+'</p><button class="btn" id="rt"><span>Пройти ещё раз</span></button></div>';let i=0;const t=setInterval(()=>{$('#rs').textContent=Math.min(++i,sc);if(i>=sc)clearInterval(t)},350);$('#rt').onclick=()=>{qi=sc=0;ask()};return}
+const[q,o]=Q[qi];qz.innerHTML='<div class="qc"><p class="qn">Вопрос '+(qi+1)+' из '+Q.length+'</p><h3>'+E(q)+'</h3>'+o.map((t,i)=>'<button class="op" data-i="'+i+'">'+E(t)+'</button>').join('')+'<p class="ex" hidden></p><button class="btn" id="nx" hidden><span>Дальше</span></button></div>'}
+qz.onclick=e=>{const b=e.target.closest('.op');if(!b||b.disabled)return;const a=Q[qi][2],ops=$$('.op',qz);ops.forEach(x=>x.disabled=true);ops[a].classList.add('ok');if(+b.dataset.i==a)sc++;else b.classList.add('bad');const x=$('.ex',qz);x.textContent=Q[qi][3];x.hidden=false;$('#nx').hidden=false;$('#nx').onclick=()=>{qi++;ask()}};ask();
+/* JS: примеры */
+$('#jc1').innerHTML=hJ("const list = document.querySelector('ul');\n\nadd.addEventListener('click', () => {\n  const li = document.createElement('li');\n  li.textContent = input.value;\n  li.addEventListener('click', () => {\n    li.classList.toggle('done');\n  });\n  list.append(li);\n});");
+const tl=$('#tl'),ti=$('#ti');
+function cnt(){const n=$$('#tl li:not(.done):not(.out)').length;$('#tn').textContent=n?'Осталось дел: '+n+'. Клик по делу отмечает его, крестик удаляет.':'Все дела выполнены. Добавьте новое.'}
+function tadd(t){const li=document.createElement('li');li.innerHTML='<span></span><button aria-label="Удалить">×</button>';li.firstChild.textContent=t;li.onclick=e=>{if(e.target.tagName=='BUTTON'){li.classList.add('out');setTimeout(()=>{li.remove();cnt()},350)}else li.classList.toggle('done');cnt()};tl.append(li);cnt()}
+['Прочитать урок про Flexbox','Сверстать свою карточку'].forEach(tadd);
+const tgo=()=>{const v=ti.value.trim();if(v){tadd(v);ti.value=''}ti.focus()};$('#ta').onclick=tgo;ti.onkeydown=e=>{if(e.key=='Enter')tgo()};
+const pad=$('#pad'),lg=$('#lg');
+function log(n,d){const li=document.createElement('li');li.innerHTML='<b>'+n+'</b><span>'+E(String(d))+'</span>';lg.prepend(li);while(lg.children.length>6)lg.lastChild.remove()}
+pad.addEventListener('mouseenter',()=>log('mouseenter','курсор над блоком'));
+pad.addEventListener('mouseleave',()=>log('mouseleave','курсор ушёл'));
+pad.addEventListener('click',e=>{const r=pad.getBoundingClientRect(),x=Math.round(e.clientX-r.left),y=Math.round(e.clientY-r.top),d=document.createElement('span');d.className='dt';d.style.left=x+'px';d.style.top=y+'px';pad.append(d);setTimeout(()=>d.remove(),800);log('click','x: '+x+', y: '+y)});
+pad.addEventListener('dblclick',()=>log('dblclick','двойной клик'));
+pad.addEventListener('keydown',e=>log('keydown','key: '+e.key));
+$('#jc2').innerHTML=hJ("pad.addEventListener('click', e => {\n  log('click', e.clientX, e.clientY);\n});\n\npad.addEventListener('keydown', e => {\n  log('keydown', e.key);\n});");
+const fn=$('#rn'),fm=$('#lm');let fmode=0;
+function fzr(){const n=+fn.value;$('#on2').textContent=n;let h='';for(let i=1;i<=n;i++){let t=i,c='';if(fmode){if(i%15==0){t='FizzBuzz';c='x'}else if(i%3==0){t='Fizz';c='z'}else if(i%5==0){t='Buzz';c='u'}}h+='<b class="'+c+'" style="--i:'+i+'">'+t+'</b>'}$('#fz').innerHTML=h;$('#fzc').innerHTML=hJ('for (let i = 1; i <= '+n+'; i++) {\n'+(fmode?"  if (i % 15 === 0) out = 'FizzBuzz';\n  else if (i % 3 === 0) out = 'Fizz';\n  else if (i % 5 === 0) out = 'Buzz';\n  else out = i;\n":'  console.log(i);\n')+'}')}
+fn.oninput=fzr;$$('button',fm).forEach((b,i)=>b.onclick=()=>{fmode=i;$$('button',fm).forEach(x=>x.classList.toggle('on',x==b));fzr()});fzr();
+/* JS: углублённые лаборатории */
+{
+const NL='\n',xc1='button{\n  background:#002ead;\n  color:#fff;\n  border:0;\n  padding:10px 22px;\n  border-radius:99px;\n}',xj1="let n = 0;\nbutton.onclick = () => {\n  n++;\n  button.textContent = 'Лайк · ' + n;\n};";
+const XN=['Только HTML: кнопка есть, но выглядит скучно и ничего не делает.','С CSS кнопка получила цвет, форму и отступы, но по-прежнему не реагирует на нажатие.','С JavaScript кнопка отвечает на клики: счётчик растёт. Нажмите на неё несколько раз.'];
+let xl=0,xk=0;const xb=$('#xlyb');
+const xlay=i=>{xl=i;$$('#xly button').forEach((b,j)=>b.classList.toggle('on',j==i));xb.className=i?'xfy':'';xb.textContent=i==2&&xk?'Лайк · '+xk:'Лайк';$('#xlyc').innerHTML=hH('<button>Лайк</button>')+(i?NL+NL+hC(xc1):'')+(i>1?NL+NL+hJ(xj1):'');$('#xlyn').textContent=XN[i]};
+xb.onclick=()=>{if(xl==2){xk++;xb.textContent='Лайк · '+xk;xb.animate([{transform:'scale(1.2)'},{transform:'none'}],{duration:260})}};
+$$('#xly button').forEach((b,j)=>b.onclick=()=>xlay(j));xlay(0);
+const XT={null:'null означает «пусто» намеренно. Но typeof даёт object: это историческая ошибка языка.',boolean:'Логический тип: только true или false.',number:'Число. В JavaScript целые и дробные числа относятся к одному типу.',string:'Строка: любой текст в кавычках.',undefined:'Значение «не задано»: его получает переменная, которой ничего не присвоили.',array:'Массив: упорядоченный список. typeof даёт object, а отличить массив помогает Array.isArray(x).',object:'Объект хранит пары «ключ: значение».'};
+const xpt=s=>{s=s.trim();if(s==='true'||s==='false')return[s==='true','boolean'];if(s==='null')return[null,'null'];if(s==='undefined')return[undefined,'undefined'];if(s!==''&&!isNaN(s))return[+s,'number'];try{const j=JSON.parse(s);if(j&&typeof j==='object')return[j,Array.isArray(j)?'array':'object']}catch(e){}return[s,'string']};
+const xty=()=>{const[x,k]=xpt($('#xti').value),lit=x===undefined?'undefined':typeof x==='number'?String(x):JSON.stringify(x);$('#xtc').innerHTML=hJ('let x = '+lit+';'+NL+NL+'typeof x'+NL+'Boolean(x)'+NL+'String(x).length');$('#xto').innerHTML='<div><b>typeof x</b> → <code>'+typeof x+'</code><br><b>Boolean(x)</b> → <code>'+Boolean(x)+'</code><br><b>String(x).length</b> → <code>'+String(x).length+'</code><p>'+XT[k]+'</p></div>'};
+$('#xti').oninput=xty;xty();
+const XA=[['map','a.map(x => x * 2)',a=>a.map(x=>x*2),'map создаёт новый массив: функция применяется к каждому элементу.'],['filter','a.filter(x => x % 2 === 0)',a=>a.filter(x=>x%2===0),'filter оставляет только те элементы, для которых функция вернула true.'],['reduce','a.reduce((s, x) => s + x, 0)',a=>a.reduce((s,x)=>s+x,0),'reduce сворачивает массив в одно значение, здесь в сумму.'],['find','a.find(x => x > 3)',a=>a.find(x=>x>3),'find возвращает первый подходящий элемент или undefined.'],['sort','[...a].sort((x, y) => y - x)',a=>[...a].sort((x,y)=>y-x),'sort сортирует копию по убыванию. Без функции он сравнивает числа как строки!']];
+let xm=0;
+const xarr=()=>{const a=$('#xai').value.split(',').map(s=>s.trim()).filter(s=>s!==''&&!isNaN(s)).map(Number),m=XA[xm],r=m[2](a),rs=Array.isArray(r)?r:[r];$('#xain').innerHTML=a.map((x,i)=>'<span style=--i:'+i+'>'+x+'</span>').join('');$('#xacd').innerHTML=hJ('const a = ['+a.join(', ')+'];'+NL+m[1]);$('#xaout').innerHTML=(rs.length?rs:['[]']).map((x,i)=>'<span style=--i:'+(i+a.length)+'>'+x+'</span>').join('');$('#xanm').textContent=m[3]};
+$('#xam').innerHTML=XA.map((m,i)=>'<button'+(i?'':' class=on')+'>'+m[0]+'</button>').join('');
+$$('#xam button').forEach((b,i)=>b.onclick=()=>{xm=i;$$('#xam button').forEach(x=>x.classList.toggle('on',x==b));xarr()});$('#xai').oninput=xarr;xarr();
+const xnn=['xn3','xn2','xn1'].map(i=>$('#'+i)),XM={xn1:'внешний',xn2:'средний',xn3:'внутренний'},xlg=$('#xlg');let xo=0;
+xnn.forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('small'))return;if(e.target===el){xo=0;xlg.innerHTML=''}const d=xo++*320;setTimeout(()=>{el.classList.add('xf');setTimeout(()=>el.classList.remove('xf'),380)},d);const l=document.createElement('div');l.textContent='click → '+XM[el.id]+(e.target===el?' (цель)':' (всплыл)');l.style.animationDelay=d+'ms';xlg.append(l);if(el.id==='xn2'&&$('#xstp').checked){e.stopPropagation();l.textContent+=' — stopPropagation(): дальше не идёт'}}));
+}
+/* история и будущее */
+{
+const HE=[
+['1989–1993','Рождение веба','Физик Тим Бернерс-Ли в CERN предложил систему гипертекста: документы со ссылками друг на друга. В 1991 году запущен первый сайт. Страницы состояли из текста и ссылок, а внешний вид выбирал сам браузер, поэтому о дизайне говорить рано.','info.cern.ch',['HTML','URL','HTTP','первый сайт, 1991']],
+['1993–1995','Картинки и таблицы','Браузер Mosaic (1993) научил показывать картинки рядом с текстом, а Netscape Navigator (1994) сделал веб массовым. Дизайнеры стали использовать таблицы как сетку, а в 1995 году появился JavaScript. Типичный сайт: серый фон, надпись «в разработке» и счётчик посетителей.','geocities.com/my-page',['Mosaic','Netscape','HTML 2.0','JavaScript, 1995']],
+['1996–1999','CSS и Flash','В 1996 году вышла первая версия CSS: оформление отделили от содержимого. Но сайты по-прежнему верстали таблицами и разрезанными картинками, а анимацию делали на Flash. Шла война браузеров Netscape и Internet Explorer: один и тот же сайт выглядел по-разному.','www.portal.ru',['CSS1','Flash','война браузеров','Google, 1998']],
+['2000–2006','Веб 2.0 и стандарты','Дизайнеры стали переходить с таблиц на CSS: проект CSS Zen Garden (2003) показал, что один HTML может выглядеть совершенно по-разному. Термин «Веб 2.0» (2004) принёс глянцевые кнопки, градиенты и отражения, а AJAX (2005) позволил обновлять часть страницы без перезагрузки.','www.social-web.com',['CSS-вёрстка','Web 2.0','AJAX','Firefox','YouTube, 2005']],
+['2007–2012','Мобильный веб','iPhone (2007) сделал смартфон главным экраном. В 2010 году Итан Маркотт описал адаптивный дизайн: одна страница подстраивается под любую ширину экрана. Появились HTML5, веб-шрифты и Bootstrap (2011), а глянец уступил место плоским цветам.','m.shop.com',['iPhone','адаптивный дизайн','HTML5','Bootstrap','веб-шрифты']],
+['2013–2019','Системы и сетки','Material Design (2014) и дизайн-системы принесли единые правила для кнопок, отступов и теней. Flexbox (широко с 2015 года) и Grid (с 2017) наконец дали нормальную раскладку. Появились React, Figma (2016) и микроанимации, которые подсказывают, что происходит на экране.','app.example.com',['Material Design','Flexbox','CSS Grid','React','Figma']],
+['2020–сейчас','Живые интерфейсы','Сайты стали быстрыми, доступными и анимированными: тёмные темы, переменные шрифты, CSS-переменные, container queries, :has() и плавные переходы между страницами. Скорость (Core Web Vitals) и доступность перестали быть хорошим тоном и стали требованием.','www.today.dev',['container queries',':has()','View Transitions','тёмная тема','доступность']]];
+const hb=$('#hbw'),hs=$('#hse'),hp=$('#hplay');let he=0,ht=null;
+const show=i=>{he=i;hb.dataset.e=i;$$('button',hs).forEach((b,j)=>b.classList.toggle('on',j==i));$('#hurl').textContent=HE[i][3];$('#hti').textContent=HE[i][0]+': '+HE[i][1];$('#htx').textContent=HE[i][2];$('#hch').innerHTML=HE[i][4].map((t,k)=>'<span style=--i:'+k+'>'+t+'</span>').join('');$('#hpr').style.width=(i+1)/HE.length*100+'%'};
+const stop=()=>{clearInterval(ht);ht=null;$('span',hp).textContent='Запустить путешествие'};
+HE.forEach((e,i)=>{const b=document.createElement('button');b.textContent=e[0];b.onclick=()=>{stop();show(i)};hs.append(b)});
+hp.onclick=()=>{if(ht){stop();return}$('span',hp).textContent='Остановить';show(0);ht=setInterval(()=>{if(he>=HE.length-1)stop();else show(he+1)},3200)};
+show(0);
+const FU=[
+['ИИ рядом с дизайнером',0,'Уже сегодня','Помощники для генерации макетов, кода и текстов уже ускоряют работу. Рутину (заготовки, варианты, проверки) берёт на себя ИИ, а вкус, понимание людей и ответственность за результат остаются за человеком. Выигрывает тот, кто умеет ставить задачу и оценивать результат.',75],
+['CSS вместо JavaScript',0,'Уже сегодня','Анимации при прокрутке, переходы между страницами, адаптивные компоненты (container queries), выбор по условию (:has()) и вложенность правил появляются прямо в CSS. Раньше на это уходил JavaScript, теперь код короче и быстрее. Проверяйте поддержку в браузерах.',85],
+['Доступность и приватность по умолчанию',0,'Уже сегодня','Законы требуют доступных сайтов, например в ЕС с 2025 года действует Европейский акт о доступности. Стандарт WCAG описывает, как сделать страницы удобными для всех: контраст, клавиатура, понятные подписи. Всё больше внимания и к приватности данных.',65],
+['Интерфейс, который подстраивается',1,'Скоро','Сайт уже учитывает тёмную тему, крупный шрифт и просьбу убрать анимацию (prefers-reduced-motion). Дальше: контент и компоновка подстраиваются под устройство, ситуацию и привычки человека, но без потери понятности.',55],
+['Лёгкий и экологичный веб',1,'Скоро','Тяжёлые страницы расходуют трафик и энергию. Скорость (Core Web Vitals) влияет на поиск и удержание посетителей. Меньше скриптов, сжатые изображения и современные форматы становятся нормой, а не оптимизацией для энтузиастов.',50],
+['3D, WebGPU и пространственный веб',2,'Дальше','WebGPU даёт сайтам доступ к мощности видеокарты: сложная 3D-графика, конфигураторы товаров, игры в браузере. Очки смешанной реальности и WebXR откроют пространственные интерфейсы, но пока это нишевое направление.',35]];
+const fg=$('#fg'),ff=$('#ffl');let fi=0;
+const frender=()=>{fg.innerHTML='';FU.forEach((f,i)=>{if(fi&&f[1]!=fi-1)return;const c=document.createElement('div');c.className='fc';c.tabIndex=0;c.setAttribute('role','button');c.style.animationDelay=fg.children.length*70+'ms';c.innerHTML='<div class=ft>'+f[2]+'</div><h4>'+f[0]+'</h4><div class=fd><div><p>'+f[3]+'</p><div class=fm style=--w:'+f[4]+'%><b></b></div><small class=ft>Готовность тренда: '+f[4]+'%</small></div></div>';const tg=()=>c.classList.toggle('open');c.onclick=tg;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}};fg.append(c)})};
+$$('button',ff).forEach((b,i)=>b.onclick=()=>{fi=i;$$('button',ff).forEach(x=>x.classList.toggle('on',x==b));frender()});frender();
+}
+/* платформа: прогресс, задания, поиск */
+{
+let KS={done:{},xp:0,st:0,last:'',b:{}};
+try{const r=localStorage.getItem('vk1');if(r)KS=Object.assign(KS,JSON.parse(r))}catch(e){}
+const ksave=()=>{try{localStorage.setItem('vk1',JSON.stringify(KS))}catch(e){}};
+const day=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),now=new Date(),td=day(now),yd=day(new Date(now-864e5));
+if(KS.last!==td){KS.st=KS.last===yd?KS.st+1:1;KS.last=td;ksave()}
+const KU=[['html','#html','Урок: HTML'],['ex1','#tasks','Задание 1'],['ex2','#tasks','Задание 2'],['box','#box','Урок: блочная модель'],['ex3','#tasks','Задание 3'],['flex','#flex','Урок: Flexbox'],['ex4','#tasks','Задание 4'],['grid','#grid','Урок: Grid'],['ex5','#tasks','Задание 5'],['anim','#anim','Урок: анимации'],['ex6','#tasks','Задание 6'],['js','#jsx','Урок: JavaScript'],['hist','#hist','История веб-дизайна'],['future','#future','Будущее веб-дизайна'],['quiz','#quiz','Тест']];
+const EX=['ex1','ex2','ex3','ex4','ex5','ex6'],LS=['html','box','flex','grid','anim','js','hist','future'];
+const KB=[['first','Первый шаг','Пройдите любой пункт',n=>n>=1],['theory','Теоретик','5 уроков',()=>LS.filter(k=>KS.done[k]).length>=5],['pract','Практик','3 задания',()=>EX.filter(k=>KS.done[k]).length>=3],['master','Мастер заданий','Все 6 заданий',()=>EX.every(k=>KS.done[k])],['streak','Постоянство','3 дня подряд',()=>KS.st>=3],['quiz','Проверка знаний','Пройдите тест',()=>KS.done.quiz],['grad','Выпускник','Весь курс',n=>n>=KU.length]];
+const th=$('#th');th.insertAdjacentHTML('beforebegin','<div class="kgrp"><button class="khud" id="kqb" type="button">Поиск · Ctrl K</button><a class="khud" href="#prog"><b id="hxp"></b><span class="kmini"><i id="hbr"></i></span></a></div>');
+const kt=$('#ktoast');let ktm;const toast=m=>{kt.textContent=m;kt.classList.add('show');clearTimeout(ktm);ktm=setTimeout(()=>kt.classList.remove('show'),2600)};
+const burst=el=>{if(rm)return;const r=el.getBoundingClientRect(),cl=['#f1be32','#99c9ff','#acd157','#dbb8ff'];for(let i=0;i<28;i++){const c=document.createElement('i');c.className='kcf';c.style.cssText='left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height/2)+'px;background:'+cl[i%4]+';--x:'+(Math.random()*360-180)+'px;--y:'+(Math.random()*-260-30)+'px';document.body.append(c);setTimeout(()=>c.remove(),1200)}};
+const lvl=()=>Math.floor(KS.xp/100)+1,cnt=()=>KU.filter(u=>KS.done[u[0]]).length;
+const ui=()=>{const n=cnt(),p=n/KU.length;
+ $('#kpct').textContent=Math.round(p*100)+'%';$('#kring').style.strokeDashoffset=327*(1-p);$('#kbar').style.width=p*100+'%';
+ $('#klv').textContent=lvl();$('#kxp').textContent=KS.xp;$('#kstk').textContent=KS.st;$('#kdn').textContent=n+'/'+KU.length;
+ $('#hxp').textContent='Ур. '+lvl()+' · '+KS.xp+' XP';$('#hbr').style.width=KS.xp%100+'%';
+ const nx=KU.find(u=>!KS.done[u[0]]);$('#kcont').href=nx?nx[1]:'#top';$('#kcont span').textContent=nx?'Продолжить: '+nx[2]:'Курс пройден';
+ $('#kbg').innerHTML=KB.map(b=>'<div class="kb'+(KS.b[b[0]]?' on':'')+'"><b>'+b[1]+'</b>'+b[2]+'</div>').join('');
+ ['html','ex2','box','flex','grid','anim','js','ex6'].forEach((k,i)=>{const e=$$('.st')[i];if(!e)return;const ok=!!KS.done[k];e.classList.toggle('ok',ok);$('span',e).textContent=ok?'✓':i+1});
+ $$('.kdone .btn').forEach(b=>{const d=KS.done[b.dataset.k];b.classList.toggle('ok',!!d);$('span',b).textContent=d?'Урок пройден ✓':'Отметить урок пройденным'});
+ $$('#ktabs button').forEach((b,i)=>b.classList.toggle('ok',!!KS.done['ex'+(i+1)]))};
+const chk=()=>{const n=cnt();KB.forEach(b=>{if(!KS.b[b[0]]&&b[3](n)){KS.b[b[0]]=1;setTimeout(()=>toast('Достижение: '+b[1]),1200)}});ksave()};
+const award=(k,x)=>{if(KS.done[k])return false;const l0=lvl();KS.done[k]=1;KS.xp+=x;toast('+'+x+' XP');if(lvl()>l0)setTimeout(()=>toast('Новый уровень: '+lvl()),700);chk();ui();return true};
+[['html','#html'],['box','#box'],['flex','#flex'],['grid','#grid'],['anim','#anim'],['js','#jsx'],['hist','#hist'],['future','#future']].forEach(([k,id])=>{const d=document.createElement('div');d.className='kdone';d.innerHTML='<button class="btn" data-k="'+k+'"><span></span></button>';$(id).append(d);$('button',d).onclick=e=>{if(award(k,20))burst(e.currentTarget)}});
+new MutationObserver(()=>{if($('#rt',$('#qz')))award('quiz',40)}).observe($('#qz'),{childList:true,subtree:true});
+/* задания */
+const KT=[
+{t:'Первая страница',d:'Создайте простую страницу о себе с помощью HTML-тегов.',h:'<!-- пишите здесь -->\n',c:'',hint:'Заголовок: h1, абзац: p, ссылка: a с атрибутом href, список: ul с тегами li внутри.',sol:['<h1>Привет, я Аня</h1>\n<p>Учусь верстать сайты.</p>\n<a href="https://example.com">Мой сайт</a>\n<ul>\n  <li>HTML</li>\n  <li>CSS</li>\n  <li>JavaScript</li>\n</ul>',''],
+ ck:[['Есть заголовок h1 с текстом',q=>q('h1')&&q('h1').textContent.trim()!==''],['Есть абзац p',q=>q('p')],['Есть ссылка a с атрибутом href',q=>q('a[href]')],['Есть список ul минимум из трёх пунктов li',q=>q('ul')&&q('ul').querySelectorAll('li').length>=3]]},
+{t:'Карточка',d:'Оформите карточку с помощью CSS: добавьте фон, отступ, скругление и поменяйте цвет заголовка.',h:'<div class="card">\n  <h2>Моя карточка</h2>\n  <p>Оформите меня с помощью CSS.</p>\n</div>',c:'.card{\n  \n}\n\nh2{\n  \n}',hint:'background:#fff; padding:20px; border-radius:12px; а для заголовка color:#002ead;',sol:['','.card{\n  padding:20px;\n  background:#fff;\n  border-radius:12px;\n}\nh2{\n  color:#002ead;\n}'],
+ ck:[['У .card есть цвет фона',(q,cs)=>cs(q('.card')).backgroundColor!=='rgba(0, 0, 0, 0)'],['Внутренний отступ padding от 16px',(q,cs)=>parseFloat(cs(q('.card')).paddingTop)>=16],['Скругление border-radius от 8px',(q,cs)=>parseFloat(cs(q('.card')).borderTopLeftRadius)>=8],['Цвет заголовка h2 отличается от цвета текста',(q,cs)=>cs(q('h2')).color!==cs(q('.card')).color]]},
+{t:'Блочная модель',d:'Настройте коробку: отступы, рамка и точная ширина вместе с ними.',h:'<div class="box">Коробка</div>',c:'.box{\n  width:200px;\n  \n}',hint:'margin, padding и border задают слои. Чтобы ширина 200px включала рамку и padding, нужен box-sizing:border-box.',sol:['','.box{\n  width:200px;\n  margin:16px;\n  padding:24px;\n  border:3px solid #0a0a23;\n  box-sizing:border-box;\n}'],
+ ck:[['Внешний отступ margin от 12px',(q,cs)=>parseFloat(cs(q('.box')).marginTop)>=12],['Внутренний отступ padding от 20px',(q,cs)=>parseFloat(cs(q('.box')).paddingTop)>=20],['Рамка толщиной от 2px',(q,cs)=>parseFloat(cs(q('.box')).borderTopWidth)>=2&&cs(q('.box')).borderTopStyle!=='none'],['Полная ширина блока ровно 200px (box-sizing: border-box)',q=>Math.round(q('.box').getBoundingClientRect().width)===200]]},
+{t:'Flexbox',d:'Выстройте три блока в ряд: растяните их по краям и выровняйте по центру по вертикали.',h:'<div class="row">\n  <div class="item">1</div>\n  <div class="item">2</div>\n  <div class="item">3</div>\n</div>',c:'.row{\n  \n}\n.item{\n  background:#f1be32;\n  padding:12px 20px;\n}',hint:'display:flex; justify-content:space-between; align-items:center; gap:12px;',sol:['','.row{\n  display:flex;\n  justify-content:space-between;\n  align-items:center;\n  gap:12px;\n}\n.item{\n  background:#f1be32;\n  padding:12px 20px;\n}'],
+ ck:[['Контейнер .row использует display:flex',(q,cs)=>cs(q('.row')).display==='flex'],['justify-content: space-between',(q,cs)=>cs(q('.row')).justifyContent==='space-between'],['align-items: center',(q,cs)=>cs(q('.row')).alignItems==='center'],['Промежуток gap от 8px',(q,cs)=>parseFloat(cs(q('.row')).columnGap)>=8]]},
+{t:'Grid',d:'Сделайте сетку из трёх колонок с промежутками, а первую ячейку растяните на две колонки.',h:'<div class="grid">\n  <div class="cell">1</div>\n  <div class="cell">2</div>\n  <div class="cell">3</div>\n  <div class="cell">4</div>\n  <div class="cell">5</div>\n</div>',c:'.grid{\n  \n}\n.cell{\n  background:#99c9ff;\n  padding:16px;\n}',hint:'display:grid; grid-template-columns:repeat(3,1fr); gap:12px; а для .cell:first-child свойство grid-column:span 2;',sol:['','.grid{\n  display:grid;\n  grid-template-columns:repeat(3,1fr);\n  gap:12px;\n}\n.cell{\n  background:#99c9ff;\n  padding:16px;\n}\n.cell:first-child{\n  grid-column:span 2;\n}'],
+ ck:[['Контейнер .grid использует display:grid',(q,cs)=>cs(q('.grid')).display==='grid'],['Три колонки',(q,cs)=>cs(q('.grid')).gridTemplateColumns.trim().split(/\s+/).length===3],['Промежуток gap от 8px',(q,cs)=>parseFloat(cs(q('.grid')).columnGap)>=8],['Первая ячейка занимает две колонки',(q,cs)=>cs(q('.cell')).gridColumnEnd==='span 2']]},
+{t:'Наведение и переход',d:'Оживите кнопку: добавьте плавный переход и эффект при наведении курсора.',h:'<button class="btn">Нажми меня</button>',c:'.btn{\n  background:#0a0a23;\n  color:#fff;\n  border:0;\n  padding:12px 24px;\n}',hint:'Добавьте в .btn свойство transition:transform .3s; а затем правило .btn:hover{ transform:scale(1.1); }',sol:['','.btn{\n  background:#0a0a23;\n  color:#fff;\n  border:0;\n  padding:12px 24px;\n  transition:transform .3s;\n}\n.btn:hover{\n  transform:scale(1.1);\n}'],
+ ck:[['У кнопки есть плавный переход transition',(q,cs)=>cs(q('.btn')).transitionDuration.split(',').some(v=>parseFloat(v)>0)],['Есть правило .btn:hover',(q,cs,css)=>/\.btn:hover\s*\{/.test(css)],['При наведении меняется transform или background',(q,cs,css)=>/\.btn:hover\s*\{[^}]*(transform|background)/.test(css)]]}];
+const kh=$('#kh'),kc=$('#kc'),sr=$('#kpv').attachShadow({mode:'open'}),kcode={};let ki=0;
+const krun=()=>{sr.innerHTML='<style>:host{display:block;padding:16px;background:#eceef2;color:#0a0a23;font:16px Mulish,sans-serif}'+kc.value.replace(/<\/style/gi,'')+'</style>'+kh.value.replace(/<script[\s\S]*?(<\/script>|$)/gi,'').replace(/\son\w+\s*=/gi,' data-x=')};
+const kload=i=>{ki=i;const t=KT[i];$$('#ktabs button').forEach((b,j)=>b.classList.toggle('on',j==i));$('#ktt').textContent=(i+1)+'. '+t.t;$('#ktd').textContent=t.d;$('#kck').innerHTML=t.ck.map(c=>'<li><i></i>'+c[0]+'</li>').join('');const v=kcode[i]||{h:t.h,c:t.c};kh.value=v.h;kc.value=v.c;$('#kmsg').textContent='';krun()};
+KT.forEach((t,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+t.t;b.onclick=()=>kload(i);$('#ktabs').append(b)});
+kh.oninput=kc.oninput=()=>{kcode[ki]={h:kh.value,c:kc.value};krun()};
+$('#kchk').onclick=()=>{krun();const q=x=>sr.querySelector(x),cs=e=>getComputedStyle(e),css=kc.value,lis=$$('#kck li');let ok=0;
+ KT[ki].ck.forEach((c,i)=>{let r=false;try{r=!!c[1](q,cs,css)}catch(e){}if(r)ok++;lis[i].className=r?'ok':'bad';lis[i].firstChild.textContent=r?'✓':'×'});
+ const m=$('#kmsg');if(ok==lis.length){m.textContent='Задание выполнено!';if(award('ex'+(ki+1),30))burst($('#kchk'))}else m.textContent='Выполнено '+ok+' из '+lis.length+'. Исправьте пункты с крестиком.'};
+$('#khint').onclick=()=>$('#kmsg').textContent='Подсказка: '+KT[ki].hint;
+$('#ksol').onclick=()=>{const t=KT[ki];kh.value=t.sol[0]||t.h;kc.value=t.sol[1]||t.c;kcode[ki]={h:kh.value,c:kc.value};krun();$('#kmsg').textContent='Это готовое решение. Нажмите «Проверить» и разберите, как оно работает.'};
+$('#krs').onclick=()=>{delete kcode[ki];kload(ki)};
+/* поиск */
+const kq=$('#kq'),kqi=$('#kqi'),kql=$('#kql');let kres=[],ka=0;
+const kdraw=()=>{kql.innerHTML=kres.map((r,i)=>'<li class="'+(i==ka?'on':'')+'"><span>'+E(r.t)+'</span><small>'+E(r.l)+'</small></li>').join('')||'<li>Ничего не найдено</li>';$$('li',kql).forEach((li,i)=>li.onclick=()=>kgo(kres[i]))};
+const kfilter=()=>{const v=kqi.value.toLowerCase().trim();kres=KI.filter(x=>!v||(x.t+' '+x.l).toLowerCase().includes(v)).slice(0,8);ka=0;kdraw()};
+let KI=[];const kclose=()=>{kq.hidden=true;$('#kcm').hidden=true};
+const kopen=()=>{KI=[...$$('section[id] h2'),...$$('.st h3'),...$$('.pn h4'),...$$('.ac>button'),...$$('.fc h4')].filter(e=>e.textContent.trim()).map(e=>({e,t:e.textContent.trim(),l:e.tagName=='H2'?'раздел':((e.closest('section')||{querySelector:()=>null}).querySelector('h2')||{textContent:''}).textContent.slice(0,28)}));kq.hidden=false;kqi.value='';kfilter();kqi.focus()};
+const kgo=r=>{if(!r)return;kclose();const e=r.e;if(e.matches('.ac>button')&&!e.parentNode.classList.contains('open'))e.click();e.scrollIntoView({behavior:rm?'auto':'smooth',block:'center'});e.classList.remove('kfl');void e.offsetWidth;e.classList.add('kfl')};
+kqi.oninput=kfilter;kqi.onkeydown=e=>{if(e.key=='ArrowDown'){ka=Math.min(ka+1,kres.length-1);kdraw();e.preventDefault()}else if(e.key=='ArrowUp'){ka=Math.max(ka-1,0);kdraw();e.preventDefault()}else if(e.key=='Enter')kgo(kres[ka])};
+kq.onclick=e=>{if(e.target===kq)kclose()};$('#kqb').onclick=kopen;
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=='k'){e.preventDefault();kopen()}else if(e.key=='Escape')kclose();else if(e.key=='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();kopen()}});
+/* сертификат и сброс */
+$('#kcert').onclick=()=>{if(cnt()<KU.length){toast('Сертификат откроется после прохождения всех '+KU.length+' пунктов');return}$('#kdate').textContent=now.toLocaleDateString('ru-RU');$('#kcm').hidden=false};
+$('#kclose').onclick=kclose;$('#kprint').onclick=()=>{try{print()}catch(e){}};
+let rc=0;$('#krst').onclick=()=>{const l=$('#krst span');if(!rc){rc=1;l.textContent='Точно сбросить?';setTimeout(()=>{rc=0;l.textContent='Сбросить прогресс'},3000);return}KS={done:{},xp:0,st:1,last:td,b:{}};ksave();rc=0;l.textContent='Сбросить прогресс';ui();toast('Прогресс сброшен')};
+kload(0);chk();ui();
+}
+/* песочница */
+const PR={'Кнопка':['<button class="b">Нажми</button>','.b{\n  padding:14px 28px;\n  border:0;\n  border-radius:99px;\n  background:#002ead;\n  color:#fff;\n  transition:transform .3s;\n}\n.b:hover{\n  transform:scale(1.12);\n}'],'Карточка':['<div class="c">\n  <h3>Заголовок</h3>\n  <p>Короткий текст карточки.</p>\n</div>','.c{\n  padding:24px;\n  background:#fff;\n  border-radius:18px;\n  box-shadow:0 14px 34px #0a0a2333;\n}\nh3{\n  margin:0 0 6px;\n  color:#946400;\n}'],'Загрузка':['<div class="d">\n  <i></i><i></i><i></i>\n</div>','.d{\n  display:flex;\n  gap:8px;\n}\n.d i{\n  width:16px;\n  height:16px;\n  border-radius:50%;\n  background:#946400;\n  animation:b 1s infinite;\n}\n.d i:nth-child(2){\n  animation-delay:.15s;\n}\n.d i:nth-child(3){\n  animation-delay:.3s;\n}\n@keyframes b{\n  50%{\n    transform:translateY(-14px);\n  }\n}']};
+const sh=$('#ppv').attachShadow({mode:'open'}),ph=$('#ph'),pc=$('#pc'),ps=$('#ps');
+const prn=()=>{sh.innerHTML='<style>:host{display:block}*{box-sizing:border-box}'+pc.value.replace(/<\/style/gi,'')+'</style>'+ph.value.replace(/<script[\s\S]*?(<\/script>|$)/gi,'').replace(/\son\w+\s*=/gi,' data-x=')};
+ph.oninput=pc.oninput=prn;
+Object.keys(PR).forEach((k,i)=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>{$$('button',ps).forEach(x=>x.classList.toggle('on',x==b));ph.value=PR[k][0];pc.value=PR[k][1];prn()};ps.append(b);if(!i)b.click()});
+/* прокрутка */
+const road=$('#rd'),steps=$$('.st'),secs=$$('section[id]'),links=$$('.links a');
+function onScroll(){const y=scrollY,h=root.scrollHeight-innerHeight,vh=innerHeight;root.style.setProperty('--p',h>0?y/h:0);
+ const r=road.getBoundingClientRect();road.style.setProperty('--lp',clamp((vh*.6-r.top)/r.height,0,1));steps.forEach(s=>s.classList.toggle('on',s.getBoundingClientRect().top<vh*.62));
+ let c='';secs.forEach(s=>{if(s.getBoundingClientRect().top<vh*.4)c=s.id});links.forEach(a=>a.classList.toggle('on',a.hash=='#'+c||(c=='cheat'&&a.hash=='#play')))}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});$$('.rv').forEach(e=>io.observe(e));
+})();
+</script>
+</body>
+</html>
